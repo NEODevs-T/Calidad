@@ -9,7 +9,7 @@ using Global.Service;
 using Blazored.SessionStorage;
 using Blazored.LocalStorage;
 
-using Calidad.Data;
+// using Calidad.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,10 +38,6 @@ builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped<global::Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider,global:: Global.Service.Autenticacion.CustomAuthStateProvider>();
 
-
-
-//Todo: Pendiente para borrar
-builder.Services.AddSingleton<WeatherForecastService>();
 
 var app = builder.Build();
 

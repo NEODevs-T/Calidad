@@ -65,11 +65,11 @@
     private string proyecto { get; set;} = "";
     private string usuario {get; set;} = "";
     private string contrasena {get; set;} = "";
-    private UserLoginDto userDto {get; set;}
-    private HttpResponseMessage result {get; set;}
-    private string validarToken  {get; set;}
+    private UserLoginDto? userDto {get; set;}
+    private HttpResponseMessage? result {get; set;}
+    private string? validarToken  {get; set;}
 
-    protected override async Task  OnInitializedAsync()
+    protected override void OnInitialized()
     {
         mensaje = "Ingrese la ficha";
         proyecto = "GestionCalidad";

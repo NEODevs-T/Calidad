@@ -44,12 +44,16 @@ namespace Global.Service.Autenticacion
 
         }
 
-        public static IEnumerable<Claim>ParseClaimsFromJwt(string jwt)
+        public static IEnumerable<Claim>?ParseClaimsFromJwt(string jwt)
         {
             var payload = jwt.Split('.')[1];
-            var jsonBytes=ParseBase64WithoutPadding(payload);
+            var jsonBytes = ParseBase64WithoutPadding(payload);
             var keyValuePairs = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonBytes);
-            return keyValuePairs.Select(KeyValuePair => new Claim(KeyValuePair.Key, KeyValuePair.Value.ToString()));
+            if(keyValuePairs != null){
+                return keyValuePairs.Select(KeyValuePair => new Claim(KeyValuePair.Key, KeyValuePair.Value.ToString() ?? ""));
+            }else{
+                return null;
+            }
         }
         private static byte[] ParseBase64WithoutPadding(string base64)
         {
