@@ -21,7 +21,7 @@
                 <div class="top-row px-4 cabeza">
                     <h5 style="text-align: start;">
                     </h5>
-                    <BSButton Color="BSColor.Success" IsOutlined="true" @onclick="logout">Logout</BSButton>
+                    <RadzenButton ButtonType="ButtonType.Button" Variant="Variant.Outlined"  Text="Logout" ButtonStyle="ButtonStyle.Success"  Click=logout/>
                 </div>
                 <article class="content px-4">
                     @Body
@@ -48,7 +48,7 @@
                         </RadzenCard>
 
                         <br>
-                        <RadzenButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabled" Text="Registrar" ButtonStyle="ButtonStyle.Success" @onclick=login/>
+                        <RadzenButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabled" Text="Registrar" ButtonStyle="ButtonStyle.Success" Click=login/>
                     </div>
                 </div>              
             </main>
