@@ -1,19 +1,123 @@
 ﻿@inherits LayoutComponentBase
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager NavigationManager
 
-<PageTitle>Calidad</PageTitle>
+@inject HttpClient Http
+@inject AuthenticationStateProvider AuthStateProvider
+
+<PageTitle>Control de la Calidad</PageTitle>
 
 <div class="page">
-    <div class="sidebar">
-        <NavMenu />
-    </div>
 
-    <main>
-        <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
-        </div>
+    <AuthorizeView>
+        <Authorized>
 
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
+            <div class="sidebar">
+                <NavMenu />
+            </div>
+
+            <main>
+                <div class="top-row px-4 cabeza">
+                    <h5 style="text-align: start;">
+                    </h5>
+                    <BSButton Color="BSColor.Success" IsOutlined="true" @onclick="logout">Logout</BSButton>
+                </div>
+                <article class="content px-4">
+                    @Body
+                </article>
+            </main>
+        </Authorized> 
+
+        <NotAuthorized>
+            <main>
+                <div class="text-center fondo">
+                    <div class="form-signin w-25 m-auto loginform ">
+
+                        <img class="mb-4" id="logoLogin" src="./img/Neo.png">
+                        <h1 class="h3 mb-3 fw-normal">Inicie Sesión</h1>
+                        
+                        <RadzenCard>
+                            <RadzenText TextStyle="TextStyle.Subtitle2" class="pt-4" TagName="TagName.H3">Usuario</RadzenText>
+                            <RadzenTextBox Placeholder="Usuario"  @bind-Value="usuario" class="w-100" />
+
+                            
+            
+                            <RadzenText TextStyle="TextStyle.Subtitle2" class="pt-5" TagName="TagName.H3">Contraseña</RadzenText>
+                            <RadzenTextBox Placeholder="Contraseña"  @bind-Value="contrasena" class="w-100" />
+                        </RadzenCard>
+
+                        <br>
+                        <RadzenButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabled" Text="Registrar" ButtonStyle="ButtonStyle.Success" @onclick=login/>
+                    </div>
+                </div>              
+            </main>
+        </NotAuthorized>
+
+    </AuthorizeView> 
+
 </div>
+
+
+@code{
+    private string? mensaje { get; set;} = "Bienvenido";
+    private bool isDisabled  { get; set;} = false;
+    private string proyecto { get; set;} = "";
+    private string usuario {get; set;} = "";
+    private string contrasena {get; set;} = "";
+    private UserLoginDto userDto {get; set;}
+    private HttpResponseMessage result {get; set;}
+    private string validarToken  {get; set;}
+
+    protected override async Task  OnInitializedAsync()
+    {
+        mensaje = "Ingrese la ficha";
+        proyecto = "GestionCalidad";
+        userDto = new UserLoginDto() ;
+    }
+
+    protected async Task logout(){
+        await LocalStorage.RemoveItemAsync(proyecto);
+        await AuthStateProvider.GetAuthenticationStateAsync();
+    }
+
+    protected async Task login(){
+        isDisabled = true;
+        mensaje = "Cargando...";
+        if (usuario.Trim() != "" && contrasena.Trim() != "")
+        {
+            userDto.Proyecto = proyecto;
+            userDto.UserName = usuario;
+            userDto.Password = contrasena;
+            result = await Http.PostAsJsonAsync("http://neo.paveca.com.ve/Authentication/api/Auth/Login", userDto);
+            validarToken = await result.Content.ReadAsStringAsync();
+            if (validarToken != null)
+            {
+                if (validarToken == "NotFoundUser")
+                {
+                    mensaje = "Verifique el usuario";
+                }
+                else if (validarToken == "WrongPassword")
+                {
+                    mensaje = "Verifique la contraseña";
+                }
+                else if (validarToken == "null")
+                {
+                    mensaje = "Verifique el usuario";
+                }
+                else
+                {
+                    await LocalStorage.SetItemAsync("GestionCalidad", validarToken);
+                    await AuthStateProvider.GetAuthenticationStateAsync();    
+                    NavigationManager.NavigateTo("");
+                    mensaje = "Bienvenido";
+                }
+            }else{
+                mensaje = "Hubo un error. Por favor intende de nuevo";
+            }
+        }else{
+            mensaje = "Ingrese un usuario, contraseña valida y ficha valida";
+        }
+        isDisabled = false;
+    }
+}
