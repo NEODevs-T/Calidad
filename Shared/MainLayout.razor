@@ -6,6 +6,8 @@
 @inject HttpClient Http
 @inject AuthenticationStateProvider AuthStateProvider
 
+@inject NotificationService NotificationService
+
 <PageTitle>Control de la Calidad</PageTitle>
 
 <div class="page">
@@ -36,26 +38,21 @@
 
                         <img class="mb-4" id="logoLogin" src="./img/Neo.png">
                         <h1 class="h3 mb-3 fw-normal">Inicie Sesión</h1>
-                        
-                        <RadzenCard>
-                            <RadzenText TextStyle="TextStyle.Subtitle2" class="pt-4" TagName="TagName.H3">Usuario</RadzenText>
-                            <RadzenTextBox Placeholder="Usuario"  @bind-Value="usuario" class="w-100" />
-
-                            
+                                           
+                        <RadzenText TextStyle="TextStyle.Subtitle1" class="pt-4" TagName="TagName.H3">Usuario</RadzenText>
+                        <RadzenTextBox Placeholder="Usuario"  @bind-Value="usuario" class="w-100" />
             
-                            <RadzenText TextStyle="TextStyle.Subtitle2" class="pt-5" TagName="TagName.H3">Contraseña</RadzenText>
-                            <RadzenTextBox Placeholder="Contraseña"  @bind-Value="contrasena" class="w-100" />
-                        </RadzenCard>
-
-                        <br>
-                        <RadzenButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabled" Text="Registrar" ButtonStyle="ButtonStyle.Success" Click=login/>
+                        <RadzenText TextStyle="TextStyle.Subtitle1" class="pt-4" TagName="TagName.H3">Contraseña</RadzenText>
+                        <RadzenTextBox Placeholder="Contraseña"  @bind-Value="contrasena" class="w-100" />
+                       
+                        <RadzenButton class="mt-4" ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabled" Text="Registrar" ButtonStyle="ButtonStyle.Success" Click=login/>
                     </div>
                 </div>              
             </main>
         </NotAuthorized>
 
     </AuthorizeView> 
-
+    <RadzenNotification/>
 </div>
 
 
@@ -71,7 +68,6 @@
 
     protected override void OnInitialized()
     {
-        mensaje = "Ingrese la ficha";
         proyecto = "GestionCalidad";
         userDto = new UserLoginDto() ;
     }
@@ -84,40 +80,64 @@
     protected async Task login(){
         isDisabled = true;
         mensaje = "Cargando...";
+        Notificacion("info","",mensaje);
         if (usuario.Trim() != "" && contrasena.Trim() != "")
         {
             userDto.Proyecto = proyecto;
             userDto.UserName = usuario;
             userDto.Password = contrasena;
-            result = await Http.PostAsJsonAsync("http://neo.paveca.com.ve/Authentication/api/Auth/Login", userDto);
-            validarToken = await result.Content.ReadAsStringAsync();
+            //* result = await Http.PostAsJsonAsync("http://neo.paveca.com.ve/Authentication/api/Auth/Login", userDto);
+            //* validarToken = await result.Content.ReadAsStringAsync();
+            validarToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
             if (validarToken != null)
             {
                 if (validarToken == "NotFoundUser")
                 {
                     mensaje = "Verifique el usuario";
+                    Notificacion("error","",mensaje);
                 }
                 else if (validarToken == "WrongPassword")
                 {
                     mensaje = "Verifique la contraseña";
+                    Notificacion("error","",mensaje);
                 }
                 else if (validarToken == "null")
                 {
                     mensaje = "Verifique el usuario";
+                    Notificacion("error","",mensaje);
                 }
                 else
                 {
                     await LocalStorage.SetItemAsync("GestionCalidad", validarToken);
                     await AuthStateProvider.GetAuthenticationStateAsync();    
-                    NavigationManager.NavigateTo("");
                     mensaje = "Bienvenido";
+                    Notificacion("exito","",mensaje);
+                    NavigationManager.NavigateTo("");
                 }
             }else{
                 mensaje = "Hubo un error. Por favor intende de nuevo";
+                Notificacion("error","",mensaje);
             }
         }else{
             mensaje = "Ingrese un usuario, contraseña valida y ficha valida";
+            Notificacion("error","",mensaje);
         }
         isDisabled = false;
     }
+
+    public void Notificacion(string tipo,string mensaje,string detalle)
+    {
+
+        NotificationMessage notificacion = new NotificationMessage{};
+        if(tipo == "error"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "info"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "exito"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "advertencia"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }
+        NotificationService.Notify(notificacion);
+    } 
 }

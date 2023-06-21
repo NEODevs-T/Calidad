@@ -9,6 +9,8 @@ using Global.Service;
 using Blazored.SessionStorage;
 using Blazored.LocalStorage;
 
+using Radzen;
+
 // using Calidad.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +37,8 @@ builder.Services.AddHttpClient();
 builder.Services.AddControllersWithViews();
 builder.Services.AddOptions();  
 builder.Services.AddAuthorizationCore();
+
+builder.Services.AddScoped<NotificationService>();
 
 builder.Services.AddScoped<global::Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider,global:: Global.Service.Autenticacion.CustomAuthStateProvider>();
 
