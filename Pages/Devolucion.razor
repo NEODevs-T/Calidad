@@ -1,3 +1,157 @@
 @page "/FormatoDevolucion"
 
 <PageTitle>Dispocisión de Producto No Conforme</PageTitle>
+
+
+<RadzenTemplateForm TItem="Object" Data=@data Submit=@OK>
+
+    <RadzenFieldset Text="Dispocisión">
+        <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
+                        <RadzenDatePicker @bind-Value=@fecha ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy hh:mm:ss tt" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CONSECUTIVO">
+                        <RadzenTextBox  class="w-100" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="TIPO">
+                        <RadzenDropDown AllowClear="true" @bind-Value=data AllowVirtualization="true" AllowFiltering="true" Data=@listaProdcutos  Style="width: 100%;" /> 
+                    </RadzenFormField>
+                </RadzenColumn> 
+                <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="LOTE">
+                        <RadzenTextBox  class="w-100" />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CÓDIGO ERP">
+                        <RadzenTextBox  class="w-100" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="8" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="DESCRIPCIÓN ERP">
+                        <RadzenTextArea Cols="30" Rows="1"  @bind-Value=observacion class="w-100"/>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="LUGAR EVENTO">
+                        <RadzenDropDown AllowClear="true" @bind-Value=data AllowVirtualization="true" AllowFiltering="true" Data=@listaProdcutos  Style="width: 100%;" /> 
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="RESPONSABLE / CAUSANTE">
+                        <RadzenDropDown AllowClear="true" @bind-Value=data AllowVirtualization="true" AllowFiltering="true" Data=@listaProdcutos  Style="width: 100%;" /> 
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CANTIDAD">
+                        <RadzenNumeric Min="1"  @bind-Value=@num1 />
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="NO CONFORMIDAD">
+                        <RadzenTextArea Cols="30" Rows="3"  @bind-Value=observacion class="w-100"/>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CAUSA">
+                        <RadzenTextArea Cols="30" Rows="3"  @bind-Value=observacion class="w-100"/>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                 <RadzenColumn Size="12" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenLabel Text="IDENTIFICACIÓN" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenRadioButtonList Data="@data1" @bind-Value=@id TValue="int" TextProperty="Name" ValueProperty="Id" class="w-100" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="ALTERNATIVA PROPUESTA DE DISPOSICIÓN">
+                        <RadzenTextArea Cols="30" Rows="3"  @bind-Value=observacion class="w-100"/>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                 <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenLabel Text="DISPOSICIÓN DEFINITIVA" />
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="9" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenRadioButtonList Data="@data2" @bind-Value=@id2 TValue="int" TextProperty="Name" ValueProperty="Id" class="w-100" />
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="IMPACTO / RIESGO">
+                        <RadzenTextArea Cols="30" Rows="3"  @bind-Value=observacion class="w-100"/>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CAUSA DE LIBERACIÓN">
+                        <RadzenTextArea Cols="30" Rows="3"  @bind-Value=observacion class="w-100"/>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="INDICACIONES DE LIBERACIÓN">
+                        <RadzenTextArea Cols="30" Rows="3"  @bind-Value=observacion class="w-100"/>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenStack>
+    </RadzenFieldset>
+    
+</RadzenTemplateForm>
+
+
+@code{
+
+     public class MyObject
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    private Object data {get; set;} = new Object();
+    private List<Object> listaProdcutos {get; set;} = new List<Object>();
+    private int num1 {get; set;} = 1;
+    private int id {get; set;} 
+    private int id2 {get; set;}
+    private string observacion {get; set;} = "";
+
+    private bool isDisabledButton {get; set;} = false;
+    private DateTime fecha {get; set;} = DateTime.Now;
+
+    private IEnumerable<MyObject> data1 {get; set;} = new MyObject[] { new MyObject(){ Id = 1 , Name = "CINTA ROJA"}, new MyObject() { Id = 2 , Name = "CINTA AMARILLA"} };
+
+    private IEnumerable<MyObject> data2 {get; set;} = new MyObject[] { new MyObject(){ Id = 1 , Name = "Aceptado/Liberado"}, new MyObject() { Id = 2 , Name = "Reclasificado"}, new MyObject() { Id = 3 , Name = "Concesionado"}, new MyObject() { Id = 4 , Name = "Rechazado"}};
+    protected override async Task OnInitializedAsync()
+    {
+        listaProdcutos.Add(new object());
+        listaProdcutos.Add(new object());
+    }
+    protected async Task OK(){
+
+    }
+    protected async Task Borrar(){
+
+    }
+}

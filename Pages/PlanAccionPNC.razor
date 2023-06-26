@@ -1,3 +1,53 @@
 @page "/AccionProductoNoConforme"
 
 <PageTitle>Plan de Accion a Productos no Conformes</PageTitle>
+
+<RadzenTemplateForm TItem="Object" Data=@data Submit=@OK>
+    <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
+        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
+                    <RadzenDatePicker Disabled="true" @bind-Value=@fecha ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy hh:mm:ss tt" />
+                </RadzenFormField>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+            
+        </RadzenRow>
+    </RadzenStack>
+
+</RadzenTemplateForm>
+
+@code{
+
+     public class MyObject
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+    }
+
+    private Object data {get; set;} = new Object();
+    private List<Object> listaProdcutos {get; set;} = new List<Object>();
+    private int num1 {get; set;} = 1;
+    private int id {get; set;} 
+    private int id2 {get; set;}
+    private string observacion {get; set;} = "";
+
+    private bool isDisabledButton {get; set;} = false;
+    private DateTime fecha {get; set;} = DateTime.Now;
+
+    private IEnumerable<MyObject> data1 {get; set;} = new MyObject[] { new MyObject(){ Id = 1 , Name = "CINTA ROJA"}, new MyObject() { Id = 2 , Name = "CINTA AMARILLA"} };
+
+    private IEnumerable<MyObject> data2 {get; set;} = new MyObject[] { new MyObject(){ Id = 1 , Name = "Aceptado/Liberado"}, new MyObject() { Id = 2 , Name = "Reclasificado"}, new MyObject() { Id = 3 , Name = "Concesionado"}, new MyObject() { Id = 4 , Name = "Rechazado"}};
+    protected override async Task OnInitializedAsync()
+    {
+        listaProdcutos.Add(new object());
+        listaProdcutos.Add(new object());
+    }
+    protected async Task OK(){
+
+    }
+    protected async Task Borrar(){
+
+    }
+}

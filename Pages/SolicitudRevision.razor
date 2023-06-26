@@ -1,3 +1,81 @@
 @page "/SolicitudRevision"
 
 <PageTitle>Solicitud de Revisión de Productos en Devolución</PageTitle>
+
+<RadzenTemplateForm TItem="Object" Data=@data Submit=@OK>
+
+    <RadzenFieldset Text="Solicitud">
+        <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="N° RECHAZADOS">
+                        <RadzenTextBox  class="w-100" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                 <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="PRODUCTO">
+                        <RadzenDropDown AllowClear="true" @bind-Value=data AllowVirtualization="true" AllowFiltering="true" Data=@listaProdcutos  Style="width: 100%;" /> 
+                          @* TextProperty="Cnom" ValueProperty="IdCentro"    *@
+                    </RadzenFormField>
+                 </RadzenColumn>
+                 <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="N° BULTOS RECIBIDOS">
+                        <RadzenNumeric Min="1"  @bind-Value=@num1 />
+                    </RadzenFormField>
+                 </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="7" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CAUSA">
+                        <RadzenTextBox  class="w-100" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                 <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="SUCURSAL">
+                        <RadzenDropDown  AllowClear="true" @bind-Value=data AllowVirtualization="true" AllowFiltering="true" Data=@listaProdcutos  Style="width: 100%;" /> 
+                          @* TextProperty="Cnom" ValueProperty="IdCentro"    *@
+                    </RadzenFormField>
+                 </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                <RadzenColumn Size="12" Class="rz-text-align-start rz-text-align-md-start">
+                    <RadzenFormField style="width: 100%;" Size="12" SizeMD="12" Text="Observación">
+                        <RadzenTextArea Name="Lndiscrepa" Cols="30" Rows="4"  @bind-Value=observacion class="w-100"/>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
+            <RadzenRow AlignItems="AlignItems.End" RowGap="0.25rem">
+                <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-end rz-text-align-md-end">
+                    <RadzenButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Disabled="@isDisabledButton" Text="Registrar" ButtonStyle="ButtonStyle.Success" />
+                    <RadzenButton ButtonType="ButtonType.Reset" Variant="Variant.Outlined" Disabled="@isDisabledButton" Click=Borrar Text="Borrar" ButtonStyle="ButtonStyle.Danger" />
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenStack>
+    </RadzenFieldset>
+    
+</RadzenTemplateForm>
+
+
+@code{
+
+    private Object data {get; set;} = new Object();
+
+    private List<Object> listaProdcutos {get; set;} = new List<Object>();
+    private int num1 {get; set;} = 1;
+
+    private string observacion {get; set;} = "";
+
+    private bool isDisabledButton {get; set;} = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        listaProdcutos.Add(new object());
+        listaProdcutos.Add(new object());
+    }
+    protected async Task OK(){
+
+    }
+    protected async Task Borrar(){
+
+    }
+}
