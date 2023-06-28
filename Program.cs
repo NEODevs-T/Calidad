@@ -54,6 +54,8 @@ builder.Services.AddScoped<IDataCentro, DataCentro>();
 builder.Services.AddScoped<IDataDivision,DataDivision>();
 builder.Services.AddScoped<IDataLinea,DataLinea>();
 
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

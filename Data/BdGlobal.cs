@@ -1,7 +1,7 @@
 using Calidad.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace Calidad.Data.Global
+namespace Global.Data
 {
     public interface IDataPais
     {
