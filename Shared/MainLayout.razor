@@ -38,13 +38,13 @@
 
                         <img class="mb-4" id="logoLogin" src="./img/Neo.png">
                         <h1 class="h3 mb-3 fw-normal">Inicie Sesión</h1>
-                                           
+
                         <RadzenText TextStyle="TextStyle.Subtitle1" class="pt-4" TagName="TagName.H3">Usuario</RadzenText>
                         <RadzenTextBox Placeholder="Usuario"  @bind-Value="usuario" class="w-100" />
-            
+                        
                         <RadzenText TextStyle="TextStyle.Subtitle1" class="pt-4" TagName="TagName.H3">Contraseña</RadzenText>
                         <RadzenTextBox Placeholder="Contraseña"  @bind-Value="contrasena" class="w-100" />
-                       
+
                         <RadzenButton class="mt-4" ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabled" Text="Registrar" ButtonStyle="ButtonStyle.Success" Click=login/>
                     </div>
                 </div>              
@@ -86,9 +86,9 @@
             userDto.Proyecto = proyecto;
             userDto.UserName = usuario;
             userDto.Password = contrasena;
-            //* result = await Http.PostAsJsonAsync("http://neo.paveca.com.ve/Authentication/api/Auth/Login", userDto);
-            //* validarToken = await result.Content.ReadAsStringAsync();
-            validarToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+            result = await Http.PostAsJsonAsync("http://neo.paveca.com.ve/Authentication/api/Auth/Login", userDto);
+            validarToken = await result.Content.ReadAsStringAsync();
+
             if (validarToken != null)
             {
                 if (validarToken == "NotFoundUser")
