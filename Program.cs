@@ -3,11 +3,17 @@ using System.Text.Json;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 
-using Global.DTOs;
-using Global.Service;
-
 using Blazored.SessionStorage;
 using Blazored.LocalStorage;
+
+using Global.DTOs;
+using Global.Service;
+using Global.Data;
+
+using Calidad.Model;
+
+
+
 
 using Radzen;
 
@@ -42,6 +48,11 @@ builder.Services.AddScoped<NotificationService>();
 
 builder.Services.AddScoped<global::Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider,global:: Global.Service.Autenticacion.CustomAuthStateProvider>();
 
+builder.Services.AddScoped<IDataPais,DataPais>();
+builder.Services.AddScoped<IDataEmpresa,DataEmpresa>();
+builder.Services.AddScoped<IDataCentro, DataCentro>();
+builder.Services.AddScoped<IDataDivision,DataDivision>();
+builder.Services.AddScoped<IDataLinea,DataLinea>();
 
 var app = builder.Build();
 
