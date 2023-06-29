@@ -20,7 +20,7 @@ namespace Calidad.ProductoNoConforme
 
         public async Task<List<Pncidentif>> ObtenerTodosLasIdentificaciones()
         {
-            return await this._cotext.Pncidentifs.Where(d => d.Iestado == true).ToListAsync();
+            return await this._cotext.Pncidentifs.Where(i => i.Iestado == true).ToListAsync();
         }
     }
 
@@ -41,7 +41,7 @@ namespace Calidad.ProductoNoConforme
 
         public async Task<List<Pnctipo>> ObtenerTodosLosTipos()
         {
-            return await this._cotext.Pnctipos.Where(d => d.Testado == true).ToListAsync();
+            return await this._cotext.Pnctipos.Where(t => t.Testado == true).ToListAsync();
         }
     }
 
@@ -66,4 +66,166 @@ namespace Calidad.ProductoNoConforme
             return await this._cotext.PncdisDefis.Where(d => d.Ddestado == true).ToListAsync();
         }
     }
+
+    public interface IDataPNCCausante
+    {
+        Task<List<Pnccausante>> ObtenerTodosLosCausantes();
+    }
+
+    public class DataPNCCausante : IDataPNCCausante
+    {
+
+        private readonly DbNeoContext _cotext;
+
+        public DataPNCCausante(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+        public async Task<List<Pnccausante>> ObtenerTodosLosCausantes()
+        {
+            return await this._cotext.Pnccausantes.Where(c => c.Cestado == true).ToListAsync();
+        }
+
+    }
+
+    public interface IDataPNCPropuestaDisposicion
+    {
+        Task<List<PncproDisp>> ObtenerTodasLasPropuestaDisposicion();
+
+        Task<bool> InsertarPropuestaDisposicion(PncproDisp registro);
+    }
+
+    public class DataPNCPropuestaDisposicion : IDataPNCPropuestaDisposicion
+    {
+
+        private readonly DbNeoContext _cotext;
+
+        public DataPNCPropuestaDisposicion(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+
+        public async Task<List<PncproDisp>> ObtenerTodasLasPropuestaDisposicion()
+        {
+            return await this._cotext.PncproDisps.Where(p => p.Pdestado == true).ToListAsync();
+        }
+
+        public async Task<bool> InsertarPropuestaDisposicion(PncproDisp registro){
+            this._cotext.PncproDisps.Add(registro);
+            return await _cotext.SaveChangesAsync() > 0;
+        }
+    }
+
+    public interface IDataPNCRiesgo
+    {
+        Task<List<Pncriesgo>> ObtenerTodosLosRiesgos();
+
+        Task<bool> RegistrarRiesgo(Pncriesgo registro);
+    }
+
+    public class DataPNCRiesgo : IDataPNCRiesgo
+    {
+
+        private readonly DbNeoContext _cotext;
+
+        public DataPNCRiesgo(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+        public async Task<List<Pncriesgo>> ObtenerTodosLosRiesgos()
+        {
+            return await this._cotext.Pncriesgos.Where(r => r.Restado == true).ToListAsync();
+        }
+        public async Task<bool> RegistrarRiesgo(Pncriesgo registro){
+            
+            this._cotext.Pncriesgos.Add(registro);
+
+            return await _cotext.SaveChangesAsync() > 0;
+        }
+    }
+
+    public interface IDataPNCUnidad
+    {
+        Task<List<Pncunidad>> ObtenerTodosLasUnidades();
+    }
+
+    public class DataPNCUnidad : IDataPNCUnidad
+    {
+
+        private readonly DbNeoContext _cotext;
+
+        public DataPNCUnidad(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+        public async Task<List<Pncunidad>> ObtenerTodosLasUnidades()
+        {
+            return await this._cotext.Pncunidads.Where(u => u.Uestado == true).ToListAsync();
+        }
+    }
+
+    public interface IDataProductoNoConforme
+    {
+        Task<bool> InsertarProductoNoConforme(ProNoCon registro);
+
+        Task<bool> ActualizarProductoNoConforme(int idProNoCon, ProNoCon registro);
+
+        Task<List<ProNoCon>> ObtenerProductoNoConformePorFecha(DateTime Fecha);
+
+        Task<List<ProNoCon>> ObtenerProductoNoConformeEntreFechas(DateTime FechaInicio, DateTime FechaFinal);
+    }
+
+    public class DataProductoNoConforme : IDataProductoNoConforme
+    {
+
+        private readonly DbNeoContext _cotext;
+
+        public DataProductoNoConforme(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+        public async Task<bool> InsertarProductoNoConforme(ProNoCon registro)
+        {
+            this._cotext.ProNoCons.Add(registro);
+            return await _cotext.SaveChangesAsync() > 0;
+        }
+
+        public async Task<bool> ActualizarProductoNoConforme(int idProNoCon, ProNoCon registro){
+            ProNoCon? data = await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idProNoCon).FirstOrDefaultAsync();
+            if(data != null){
+                data.IdCausante = registro.IdCausante;
+                data.IdDisDefi = registro.IdDisDefi;
+                data.IdEstado = registro.IdEstado;
+                data.IdIdentif = registro.IdIdentif;
+                data.IdLugaEven = registro.IdLugaEven;
+                data.IdProDisp = registro.IdProDisp;
+                data.IdRiesgo = registro.IdRiesgo;
+                data.IdTipo = registro.IdTipo;
+                data.IdUnidad = registro.IdUnidad;
+                data.Pnccantida = registro.Pnccantida;
+                data.Pnccargador = registro.Pnccargador;
+                data.PnccauLibe = registro.PnccauLibe;
+                data.Pnccausa = registro.Pnccausa;
+                data.PnccodProd = registro.PnccodProd;
+                data.Pncconsecu = registro.Pncconsecu;
+                data.PncdesProd = registro.PncdesProd;
+                data.Pncfecha = registro.Pncfecha;
+                data.Pncinconfo = registro.Pncinconfo;
+                data.PncindLibe = registro.PncindLibe;
+                data.Pnclote = registro.Pnclote;
+                return 0 < await _cotext.SaveChangesAsync();
+            }
+            return false;
+        }
+
+        public async Task<List<ProNoCon>> ObtenerProductoNoConformePorFecha(DateTime Fecha){
+            return await this._cotext.ProNoCons.Where(p => p.Pncfecha.Date == Fecha.Date).ToListAsync();
+        }
+
+        public async Task<List<ProNoCon>> ObtenerProductoNoConformeEntreFechas(DateTime FechaInicio, DateTime FechaFinal){
+            return await this._cotext.ProNoCons.Where(p => p.Pncfecha.Date >= FechaInicio.Date && p.Pncfecha.Date <= FechaFinal.Date).ToListAsync();
+        }
+    }
+
+
 }
