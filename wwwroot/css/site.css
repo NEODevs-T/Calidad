@@ -92,3 +92,30 @@ textarea {
 tbody{
     text-align:center;
 }
+
+.nav-item[b-deikdpf3cx] a{
+    line-height: 1.1rem !important;
+    text-align:start;
+    height: 60px !important;
+}
+
+.nav-item[b-deikdpf3cx] a span{
+    margin-right: 5%;
+}
+
+.linksNav{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+
+
+.linksNav span {
+    margin-left: 10%;
+}
+
+.iconNav{
+    width: 100%;
+}

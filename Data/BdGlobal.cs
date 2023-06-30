@@ -83,6 +83,7 @@ namespace Global.Data
         Task<List<Linea>> ObtenerLasLineasPorCentro(int idCentro);
         Task<List<Linea>> ObtenerTodasLasLineas();
         Task<List<Linea>> ObtenerLasLineasPorDivision(int idDivision);
+        Task<List<Linea>> ObtenerTodasLasLineasDeLaEmpresa(int IdEmpresa);
     }
     public class DataLinea : IDataLinea
     {
@@ -105,6 +106,12 @@ namespace Global.Data
         public async Task<List<Linea>> ObtenerTodasLasLineas(){
             return await _cotext.Lineas.OrderBy(l => l.Lnom).ToListAsync();
         }
+
+        public async Task<List<Linea>> ObtenerTodasLasLineasDeLaEmpresa(int IdEmpresa){
+            
+            return await _cotext.Lineas.Where(l => l.IdDivisionNavigation.IdCentroNavigation.IdEmpresa == IdEmpresa).OrderBy(l => l.Lnom).ToListAsync();
+        }
+
 
         public async Task<List<Linea>> ObtenerLasLineasPorDivision(int idDivision){
             return await _cotext.Lineas.Where(l => l.IdDivision == idDivision).ToListAsync();

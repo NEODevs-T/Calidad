@@ -2,6 +2,9 @@ using System.Text.Json;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.Components.Authorization;
+
+using Microsoft.EntityFrameworkCore;
 
 using Blazored.SessionStorage;
 using Blazored.LocalStorage;
@@ -11,6 +14,7 @@ using Global.Service;
 using Global.Data;
 
 using Calidad.Model;
+using Calidad.ProductoNoConforme;
 
 
 
@@ -48,13 +52,25 @@ builder.Services.AddScoped<NotificationService>();
 
 builder.Services.AddScoped<global::Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider,global:: Global.Service.Autenticacion.CustomAuthStateProvider>();
 
+
+builder.Services.AddDbContext<DbNeoContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionDbNeo")),ServiceLifetime.Transient
+);
+
 builder.Services.AddScoped<IDataPais,DataPais>();
 builder.Services.AddScoped<IDataEmpresa,DataEmpresa>();
 builder.Services.AddScoped<IDataCentro, DataCentro>();
 builder.Services.AddScoped<IDataDivision,DataDivision>();
 builder.Services.AddScoped<IDataLinea,DataLinea>();
 
-
+builder.Services.AddScoped<IDataPNCCausante,DataPNCCausante>();
+builder.Services.AddScoped<IDataPNCDisposicionDefinitiva,DataPNCDisposicionDefinitiva>();
+builder.Services.AddScoped<IDataPNCIdentificacion,DataPNCIdentificacion>();
+builder.Services.AddScoped<IDataPNCPropuestaDisposicion,DataPNCPropuestaDisposicion>();
+builder.Services.AddScoped<IDataPNCRiesgo,DataPNCRiesgo>();
+builder.Services.AddScoped<IDataPNCUnidad,DataPNCUnidad>();
+builder.Services.AddScoped<IDataProductoNoConforme,DataProductoNoConforme>();
+builder.Services.AddScoped<IDataPNCTipo,DataPNCTipo>();
 
 var app = builder.Build();
 

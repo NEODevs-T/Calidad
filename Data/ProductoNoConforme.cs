@@ -149,7 +149,7 @@ namespace Calidad.ProductoNoConforme
         Task<List<Pncunidad>> ObtenerTodosLasUnidades();
     }
 
-    public class DataPNCUnidad : IDataPNCUnidad
+    public class DataPNCUnidad : IDataPNCUnidad 
     {
 
         private readonly DbNeoContext _cotext;
