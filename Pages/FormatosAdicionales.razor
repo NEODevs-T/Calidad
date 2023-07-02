@@ -1,0 +1,142 @@
+@page "/FormatoAdicionales"
+
+@inject NotificationService NotificationService
+
+@inject IDataPNCRiesgo DataPNCRiesgo
+@inject IDataPNCPropuestaDisposicion DataPNCPropuestaDisposicion
+
+<PageTitle>Formatos Adicionales</PageTitle>
+
+<AuthorizeView Context="autorized" Roles="SuperAdmin,SuperUser,Calidad">
+    <Authorized>
+
+        <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
+            Formatos 
+        </RadzenText>
+
+        <RadzenTemplateForm TItem="Pncriesgo" Data=@riesgo Submit=@OKRiesgo>
+            <RadzenFieldset Text="Formatos de Riesgo">
+                <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
+                    <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                        <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Riesgo">
+                                <RadzenTextBox Name="nombreRiesgo" @bind-Value=riesgo.Rnombre  class="w-100" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="nombreRiesgo" Text="Requerido" Popup=@popup Style="position: relative"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="7" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Descripcion">
+                                <RadzenTextBox  @bind-Value=riesgo.Rdescri  class="w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                        <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Disabled="@isDisabledButton" Text="Registrar" ButtonStyle="ButtonStyle.Success" />
+                            <RadzenButton ButtonType="ButtonType.Reset" Variant="Variant.Outlined" Disabled="@isDisabledButton" Click=BorrarRiesgo Text="Borrar" ButtonStyle="ButtonStyle.Danger" />
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenTemplateForm>
+
+        <RadzenTemplateForm TItem="PncproDisp" Data=@alternativaDisposicion Submit=@OKAlternativaDisposicion>
+            <RadzenFieldset Text="Formatos de Riesgo">
+                <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
+                    <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                        <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Alternativa Propuesta de Disposicion">
+                                <RadzenTextBox Name="nombreAlternativaDisposicion" @bind-Value=alternativaDisposicion.Pdnombre  class="w-100" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="nombreAlternativaDisposicion" Text="Requerido" Popup=@popup Style="position: relative"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="7" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Descripcion">
+                                <RadzenTextBox  @bind-Value=alternativaDisposicion.Pddescri  class="w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                        <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Disabled="@isDisabledButton" Text="Registrar" ButtonStyle="ButtonStyle.Success" />
+                            <RadzenButton ButtonType="ButtonType.Reset" Variant="Variant.Outlined" Disabled="@isDisabledButton" Click=BorrarAlternativaDisposicion Text="Borrar" ButtonStyle="ButtonStyle.Danger" />
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenTemplateForm>
+    </Authorized>
+    <NotAuthorized>
+         <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
+            No tiene Acceso a este modulo
+        </RadzenText>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code{
+    private Pncriesgo riesgo {get; set;} = new Pncriesgo();
+
+    private PncproDisp alternativaDisposicion {get; set;} = new PncproDisp();
+    private bool popup {get; set;} = false; 
+    private bool isDisabledButton {get; set;} = false;
+    private bool allOk {get; set;} 
+
+
+    protected async Task OKRiesgo(){
+        isDisabledButton = true;
+        
+        riesgo.Restado = true;
+        allOk = await DataPNCRiesgo.RegistrarRiesgo(riesgo);
+
+        if(allOk){
+            riesgo = new Pncriesgo();
+            Notificacion("exito","","Registrado con exito");
+        }else{
+            Notificacion("error","Error"," Realice nuevamente la carga");
+        }
+
+        isDisabledButton = false;
+    }
+
+    protected async Task OKAlternativaDisposicion(){
+        isDisabledButton = true;
+        
+        alternativaDisposicion.Pdestado = true;
+        allOk = await DataPNCPropuestaDisposicion.InsertarPropuestaDisposicion(alternativaDisposicion);
+
+        if(allOk){
+            alternativaDisposicion = new PncproDisp();
+            Notificacion("exito","","Registrado con exito");
+        }else{
+            Notificacion("error","Error"," Realice nuevamente la carga");
+        }
+
+        isDisabledButton = false;
+    }
+
+    protected void BorrarRiesgo(){
+        riesgo = new Pncriesgo();
+    }
+
+    protected void BorrarAlternativaDisposicion(){
+        alternativaDisposicion = new PncproDisp();
+    }
+
+    public void Notificacion(string tipo,string mensaje,string detalle)
+    {
+
+        NotificationMessage notificacion = new NotificationMessage{};
+        if(tipo == "error"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "info"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "exito"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "advertencia"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }
+        NotificationService.Notify(notificacion);
+    } 
+}
+
