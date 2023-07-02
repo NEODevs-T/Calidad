@@ -1,0 +1,52 @@
+@page "/HistorialPNC"
+
+<PageTitle>Historial de Dispocisión de Producto No Conforme</PageTitle>
+
+
+<AuthorizeView Roles="SuperAdmin,SuperUser,Calidad" Context="autorized">
+   <Authorized>
+
+        <RadzenFieldset Text="Filtros">
+            <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
+                <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                    <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                        <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
+                            <RadzenDatePicker Name="FECHA" @bind-Value=fechaEmicion ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenStack>
+        </RadzenFieldset>
+
+    <div class="table">
+        <RadzenDataGrid @ref="ordersProductoNoConforme" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true" 
+                    Data="@listaProductoNoConforme" TItem="ProNoCon" >
+            <Columns>
+                <RadzenDataGridColumn   Width="40px" TItem="ProNoCon" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                    <Template Context="data">
+                        <RadzenText class="mb-0 tipografia">@(listaProductoNoConforme.IndexOf(data) + 1)</RadzenText>
+                    </Template>
+                </RadzenDataGridColumn>
+                <RadzenDataGridColumn Width="180px" TItem="ProNoCon" Property="" Title="">
+                    <Template Context="order">
+                        <RadzenText class="mb-0 tipografia"></RadzenText>
+                    </Template>
+                </RadzenDataGridColumn>
+            </Columns>
+        </RadzenDataGrid>
+    </div>
+
+   </Authorized>
+   <NotAuthorized>
+         <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
+            No tiene Acceso a este modulo
+        </RadzenText>
+    </NotAuthorized>
+</AuthorizeView>
+
+    
+@code{
+    private DateTime fechaEmicion {get; set;} = DateTime.Now;
+    public RadzenDataGrid<ProNoCon> ordersProductoNoConforme {get; set;} = new RadzenDataGrid<ProNoCon>();
+    public IList<ProNoCon> listaProductoNoConforme {get; set;} = new List<ProNoCon>();
+}
