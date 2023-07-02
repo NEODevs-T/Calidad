@@ -80,7 +80,7 @@ namespace Global.Data
 
     public interface IDataLinea
     {
-        Task<List<Linea>> ObtenerLasLineasPorCentro(int idCentro);
+        Task<List<Linea>?> ObtenerLasLineasPorCentro(int idCentro);
         Task<List<Linea>> ObtenerTodasLasLineas();
         Task<List<Linea>> ObtenerLasLineasPorDivision(int idDivision);
         Task<List<Linea>> ObtenerTodasLasLineasDeLaEmpresa(int IdEmpresa);
@@ -93,7 +93,7 @@ namespace Global.Data
         {
             this._cotext = context;
         }
-        public async Task<List<Linea>> ObtenerLasLineasPorCentro(int idCentro)
+        public async Task<List<Linea>?> ObtenerLasLineasPorCentro(int idCentro)
         {
             if(idCentro == 0){
                 return await _cotext.Lineas.Where(x => x.Lestado == true).ToListAsync();

@@ -62,14 +62,13 @@
     private string proyecto { get; set;} = "";
     private string usuario {get; set;} = "";
     private string contrasena {get; set;} = "";
-    private UserLoginDto? userDto {get; set;}
+    private UserLoginDto userDto {get; set;} = new UserLoginDto();
     private HttpResponseMessage? result {get; set;}
     private string? validarToken  {get; set;}
 
     protected override void OnInitialized()
     {
         proyecto = "GestionCalidad";
-        userDto = new UserLoginDto() ;
     }
 
     protected async Task logout(){

@@ -178,19 +178,19 @@
     private Task<AuthenticationState>? authenticationState { get; set; }
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
     private ProNoCon registro {get; set;}  = new ProNoCon();
-    private List<Pnccausante> listaCausante {get; set;} 
-    private List<PncdisDefi> listaDisposicionDefinitiva {get; set;} 
-    private List<Pncidentif> listaIdentificacion {get; set;} 
-    private List<PncproDisp> listaPropuestaDisposicion {get; set;}
-    private List<Pncriesgo> listaRiesgo {get; set;}
-    private List<Pncunidad> listaUnidad {get; set;}
-    private List<Pnctipo> listaTipo {get; set;}
-    private string? ficha { get; set;} 
+    private List<Pnccausante>? listaCausante {get; set;} 
+    private List<PncdisDefi>? listaDisposicionDefinitiva {get; set;} 
+    private List<Pncidentif>? listaIdentificacion {get; set;} 
+    private List<PncproDisp>? listaPropuestaDisposicion {get; set;}
+    private List<Pncriesgo>? listaRiesgo {get; set;}
+    private List<Pncunidad>? listaUnidad {get; set;}
+    private List<Pnctipo>? listaTipo {get; set;}
+    private string ficha { get; set;} = "";
     private int idEmpresa { get; set; }
     private bool isDisabledButton {get; set;} = false;
     private bool popup {get; set;} = false;
     private bool isEstado {get; set;} 
-    private List<Linea> listaEventos {get; set;}
+    private List<Linea>? listaEventos {get; set;}
     protected override async Task OnInitializedAsync()
     {
         if (authenticationState is not null)
