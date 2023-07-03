@@ -84,7 +84,9 @@
 
     protected async Task OKRiesgo(){
         isDisabledButton = true;
-        
+
+        Notificacion("info","","Cagando...");
+
         riesgo.Restado = true;
         allOk = await DataPNCRiesgo.RegistrarRiesgo(riesgo);
 
@@ -100,6 +102,8 @@
 
     protected async Task OKAlternativaDisposicion(){
         isDisabledButton = true;
+
+        Notificacion("info","","Cagando...");
         
         alternativaDisposicion.Pdestado = true;
         allOk = await DataPNCPropuestaDisposicion.InsertarPropuestaDisposicion(alternativaDisposicion);
