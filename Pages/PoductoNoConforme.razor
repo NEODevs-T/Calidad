@@ -1,4 +1,4 @@
-@page "/FormatoDevolucion"
+@page "/FormatoDPNC"
 
 
 @inject NotificationService NotificationService
@@ -17,7 +17,7 @@
 
 
 
-<AuthorizeView Roles="SuperAdmin,SuperUser,Calidad" Context="autorized">
+<AuthorizeView Roles="SuperAdmin,SuperUser,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad" Context="autorized">
    <Authorized>
         <RadzenText TextStyle="TextStyle.DisplayH5"  class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">Dispocisión De Producto No Conforme</RadzenText>
 
@@ -166,7 +166,7 @@
         </RadzenTemplateForm>
     </Authorized>
     <NotAuthorized>
-         <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
+        <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
             No tiene Acceso a este modulo
         </RadzenText>
     </NotAuthorized>
@@ -214,7 +214,6 @@
                 listaTipo = await DataPNCTipo.ObtenerTodosLosTipos();
                 listaEventos = await DataLinea.ObtenerTodasLasLineasDeLaEmpresa(idEmpresa);
                 registro.Pnccantida = 1;
-
             }
         }
     }

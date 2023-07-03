@@ -1,44 +1,88 @@
 @page "/HistorialPNC"
 
+@inject IDataProductoNoConforme DataProductoNoConforme
+
 <PageTitle>Historial de Dispocisión de Producto No Conforme</PageTitle>
 
 
 <AuthorizeView Roles="SuperAdmin,SuperUser,Calidad" Context="autorized">
-   <Authorized>
+    <Authorized>
 
-        <RadzenFieldset Text="Filtros">
+        <RadzenFieldset Text="Filtro">
             <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
                 <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                     <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
                         <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
-                            <RadzenDatePicker Name="FECHA" @bind-Value=fechaEmicion ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy" />
+                            <RadzenDatePicker Name="fechaEmicionInicio" @bind-Value=fechaEmicionInicio ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy" />
                         </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                        <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
+                            <RadzenDatePicker Name="fechaEmicionFinal" @bind-Value=fechaEmicionFinal ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy" />
+                        </RadzenFormField>
+                    </RadzenColumn>
+                    <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                        <RadzenButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabledButton" Click="Buscar" Text="Buscar" ButtonStyle="ButtonStyle.Success" />
                     </RadzenColumn>
                 </RadzenRow>
             </RadzenStack>
         </RadzenFieldset>
 
-    <div class="table">
-        <RadzenDataGrid @ref="ordersProductoNoConforme" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true" 
-                    Data="@listaProductoNoConforme" TItem="ProNoCon" >
-            <Columns>
-                <RadzenDataGridColumn   Width="40px" TItem="ProNoCon" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
-                    <Template Context="data">
-                        <RadzenText class="mb-0 tipografia">@(listaProductoNoConforme.IndexOf(data) + 1)</RadzenText>
-                    </Template>
-                </RadzenDataGridColumn>
-                <RadzenDataGridColumn Width="180px" TItem="ProNoCon" Property="" Title="">
-                    <Template Context="order">
-                        <RadzenText class="mb-0 tipografia"></RadzenText>
-                    </Template>
-                </RadzenDataGridColumn>
-            </Columns>
-        </RadzenDataGrid>
-    </div>
-
-   </Authorized>
-   <NotAuthorized>
-         <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
+        <div class="table">
+            <RadzenDataGrid @ref="ordersProductoNoConforme" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true" 
+                        Data="@listaProductoNoConforme" TItem="ProductoNoConforme" >
+                <Columns>
+                    <RadzenDataGridColumn Width="5%" TItem="ProductoNoConforme" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                        <Template Context="data">
+                            <RadzenText class="mb-0 tipografia">@(listaProductoNoConforme.IndexOf(data) + 1)</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn  TItem="ProductoNoConforme" Property="Fecha" Title="Fecha">
+                        <Template Context="order">
+                            <RadzenText class="mb-0 tipografia">@order.Fecha.ToString("MM/dd/yyyy")</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn  TItem="ProductoNoConforme" Property="CodigoDeProducto" Title="Codigo del Producto">
+                        <Template Context="order">
+                            <RadzenText class="mb-0 tipografia">@order.CodigoDeProducto</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="DescripcionDeProducto" Title="Descripción del Producto">
+                        <Template Context="order">
+                            <RadzenText class="mb-0 tipografia">@order.DescripcionDeProducto</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn  TItem="ProductoNoConforme" Property="Tipo" Title="Tipo">
+                        <Template Context="order">
+                            <RadzenText class="mb-0 tipografia">@order.Tipo</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="LugarEvento" Title="Lugar del Evento">
+                        <Template Context="order">
+                            <RadzenText class="mb-0 tipografia">@order.LugarEvento</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Causante" Title="Reponsable / Causante">
+                        <Template Context="order">
+                            <RadzenText class="mb-0 tipografia">@order.Causante</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Cantidad" Title="Cantidad">
+                        <Template Context="order">
+                            <RadzenText class="mb-0 tipografia">@order.Cantidad  @order.Unidad</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Cantidad" Title="Cantidad">
+                        <Template Context="order">
+                            <RadzenText class="mb-0 tipografia">@order.Cantidad  @order.Unidad</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn>
+                </Columns>
+            </RadzenDataGrid>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
             No tiene Acceso a este modulo
         </RadzenText>
     </NotAuthorized>
@@ -46,7 +90,13 @@
 
     
 @code{
-    private DateTime fechaEmicion {get; set;} = DateTime.Now;
-    public RadzenDataGrid<ProNoCon> ordersProductoNoConforme {get; set;} = new RadzenDataGrid<ProNoCon>();
-    public IList<ProNoCon> listaProductoNoConforme {get; set;} = new List<ProNoCon>();
+    private DateTime fechaEmicionInicio {get; set;} = DateTime.Now;
+    private DateTime fechaEmicionFinal {get; set;} = DateTime.Now;
+    public RadzenDataGrid<ProductoNoConforme> ordersProductoNoConforme {get; set;} = new RadzenDataGrid<ProductoNoConforme>();
+    public IList<ProductoNoConforme> listaProductoNoConforme {get; set;} = new List<ProductoNoConforme>();
+    private bool isDisabledButton {get; set;} = false;
+
+    protected async Task Buscar(){
+        listaProductoNoConforme = await DataProductoNoConforme.ObtenerProductoNoConformePorFiltro(fechaEmicionInicio,fechaEmicionFinal);
+    }
 }

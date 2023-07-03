@@ -7,9 +7,8 @@
 
 <PageTitle>Formatos Adicionales</PageTitle>
 
-<AuthorizeView Context="autorized" Roles="SuperAdmin,SuperUser,Calidad">
+<AuthorizeView Context="autorized" Roles="SuperAdmin,SuperUser,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad">
     <Authorized>
-
         <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
             Formatos 
         </RadzenText>
@@ -41,11 +40,11 @@
         </RadzenTemplateForm>
 
         <RadzenTemplateForm TItem="PncproDisp" Data=@alternativaDisposicion Submit=@OKAlternativaDisposicion>
-            <RadzenFieldset Text="Formatos de Riesgo">
+            <RadzenFieldset Text="Formatos de Alternativa Propuesta de Disposición">
                 <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
                     <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                         <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
-                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Alternativa Propuesta de Disposicion">
+                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Alternativa Propuesta de Disposición">
                                 <RadzenTextBox Name="nombreAlternativaDisposicion" @bind-Value=alternativaDisposicion.Pdnombre  class="w-100" />
                             </RadzenFormField>
                             <RadzenRequiredValidator Component="nombreAlternativaDisposicion" Text="Requerido" Popup=@popup Style="position: relative"/>

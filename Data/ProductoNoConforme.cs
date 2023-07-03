@@ -170,9 +170,11 @@ namespace Calidad.ProductoNoConforme
 
         Task<bool> ActualizarProductoNoConforme(int idProNoCon, ProNoCon registro);
 
-        Task<List<ProNoCon>> ObtenerProductoNoConformePorFecha(DateTime Fecha);
+        Task<List<Calidad.Model.ProductoNoConforme>> ObtenerProductoNoConformePorFecha(DateTime Fecha);
 
-        Task<List<ProNoCon>> ObtenerProductoNoConformeEntreFechas(DateTime FechaInicio, DateTime FechaFinal);
+        Task<List<Calidad.Model.ProductoNoConforme>> ObtenerProductoNoConformeEntreFechas(DateTime FechaInicio, DateTime FechaFinal);
+
+        Task<List<Calidad.Model.ProductoNoConforme>> ObtenerProductoNoConformePorFiltro(DateTime fechaInicio, DateTime fechaFinal);
     }
 
     public class DataProductoNoConforme : IDataProductoNoConforme
@@ -218,12 +220,22 @@ namespace Calidad.ProductoNoConforme
             return false;
         }
 
-        public async Task<List<ProNoCon>> ObtenerProductoNoConformePorFecha(DateTime Fecha){
-            return await this._cotext.ProNoCons.Where(p => p.Pncfecha.Date == Fecha.Date).ToListAsync();
+        public async Task<List<Calidad.Model.ProductoNoConforme>> ObtenerProductoNoConformePorFecha(DateTime Fecha){
+            return await this._cotext.ProductoNoConformes.Where(p => p.Fecha.Date == Fecha.Date).ToListAsync();
         }
 
-        public async Task<List<ProNoCon>> ObtenerProductoNoConformeEntreFechas(DateTime FechaInicio, DateTime FechaFinal){
-            return await this._cotext.ProNoCons.Where(p => p.Pncfecha.Date >= FechaInicio.Date && p.Pncfecha.Date <= FechaFinal.Date).ToListAsync();
+        public async Task<List<Calidad.Model.ProductoNoConforme>> ObtenerProductoNoConformeEntreFechas(DateTime fechaInicio, DateTime fechaFinal){
+            return await this._cotext.ProductoNoConformes.Where(p => p.Fecha.Date >= fechaInicio.Date && p.Fecha.Date <= fechaFinal.Date).ToListAsync();
+        }
+
+        public async Task<List<Calidad.Model.ProductoNoConforme>> ObtenerProductoNoConformePorFiltro(DateTime fechaInicio, DateTime fechaFinal){
+            if(fechaInicio.Date == fechaFinal.Date){
+                return await this.ObtenerProductoNoConformePorFecha(fechaInicio);
+            }else if(fechaInicio.Date < fechaFinal.Date){
+                return await this.ObtenerProductoNoConformeEntreFechas(fechaInicio,fechaFinal);
+            }
+            return await this.ObtenerProductoNoConformeEntreFechas(fechaFinal,fechaInicio);
+
         }
     }
 

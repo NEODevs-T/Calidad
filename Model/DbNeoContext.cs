@@ -42,6 +42,10 @@ public partial class DbNeoContext : DbContext
     public virtual DbSet<Pncunidad> Pncunidads { get; set; }
 
     public virtual DbSet<ProNoCon> ProNoCons { get; set; }
+
+    public virtual DbSet<ProductoNoConforme> ProductoNoConformes { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Centro>(entity =>
@@ -388,6 +392,73 @@ public partial class DbNeoContext : DbContext
                 .HasForeignKey(d => d.IdUnidad)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProNoCon_PNCUnidad");
+        });
+
+        modelBuilder.Entity<ProductoNoConforme>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("ProductoNoConforme");
+
+            entity.Property(e => e.AlternativaPropuestoDeDisposicion)
+                .HasMaxLength(80)
+                .IsUnicode(false)
+                .HasColumnName("Alternativa Propuesto De Disposicion");
+            entity.Property(e => e.Causa).IsUnicode(false);
+            entity.Property(e => e.CausaDeLiberación)
+                .IsUnicode(false)
+                .HasColumnName("Causa de Liberación");
+            entity.Property(e => e.Causante)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.CodigoDeProducto)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("Codigo de Producto");
+            entity.Property(e => e.Consecutivo)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.DescripcionDeProducto)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("Descripcion de Producto");
+            entity.Property(e => e.DisposicionDefinitiva)
+                .HasMaxLength(80)
+                .IsUnicode(false)
+                .HasColumnName("Disposicion Definitiva");
+            entity.Property(e => e.Estado)
+                .HasMaxLength(50)
+                .IsUnicode(false);
+            entity.Property(e => e.Fecha).HasColumnType("date");
+            entity.Property(e => e.FichaDelCargador)
+                .HasMaxLength(50)
+                .IsUnicode(false)
+                .HasColumnName("Ficha del Cargador");
+            entity.Property(e => e.Identificacion)
+                .HasMaxLength(80)
+                .IsUnicode(false);
+            entity.Property(e => e.IndicacionDeLiberacion)
+                .IsUnicode(false)
+                .HasColumnName("Indicacion de Liberacion");
+            entity.Property(e => e.Lote)
+                .HasMaxLength(100)
+                .IsUnicode(false);
+            entity.Property(e => e.LugarEvento)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("Lugar Evento");
+            entity.Property(e => e.NoConformidad)
+                .IsUnicode(false)
+                .HasColumnName("No Conformidad");
+            entity.Property(e => e.Riesgo)
+                .HasMaxLength(80)
+                .IsUnicode(false);
+            entity.Property(e => e.Tipo)
+                .HasMaxLength(80)
+                .IsUnicode(false);
+            entity.Property(e => e.Unidad)
+                .HasMaxLength(50)
+                .IsUnicode(false);
         });
 
         OnModelCreatingPartial(modelBuilder);
