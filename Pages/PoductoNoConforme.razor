@@ -17,7 +17,7 @@
 
 
 
-<AuthorizeView Roles="SuperAdmin,SuperUser,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad" Context="autorized">
+<AuthorizeView Roles="SuperAdmin,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad,SuperUser" Context="autorized">
    <Authorized>
         @if(isCargado){
             <RadzenText TextStyle="TextStyle.DisplayH5"  class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">Dispocisión De Producto No Conforme</RadzenText>
@@ -29,7 +29,7 @@
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                             <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
-                                    <RadzenDatePicker Name="FECHA" @bind-Value=registro.Pncfecha ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy" />
+                                    <RadzenDatePicker Name="FECHA" @bind-Value=registro.Pncfecha DateFormat="MM/dd/yyyy" />
                                 </RadzenFormField>
                                 <RadzenRequiredValidator Component="FECHA" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
@@ -163,10 +163,13 @@
                         </RadzenRow>
                     </RadzenStack>
                 </RadzenFieldset>
-                
             </RadzenTemplateForm>
         }else{
-            
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
             <RadzenRow class="carga" JustifyContent="JustifyContent.Center">
                     <RadzenColumn Size="3">
                         <div class="loader"></div>

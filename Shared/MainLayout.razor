@@ -43,7 +43,7 @@
                         <RadzenTextBox Placeholder="Usuario"  @bind-Value="usuario" class="w-100" />
                         
                         <RadzenText TextStyle="TextStyle.Subtitle1" class="pt-4" TagName="TagName.H3">Contraseña</RadzenText>
-                        <RadzenTextBox Placeholder="Contraseña"  @bind-Value="contrasena" class="w-100" />
+                        <RadzenPassword @bind-Value=@contrasena Placeholder="Contraseña..."  class="w-100"/>
 
                         <RadzenButton class="mt-4" ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabled" Text="Registrar" ButtonStyle="ButtonStyle.Success" Click=login/>
                     </div>
@@ -83,8 +83,10 @@
         if (usuario.Trim() != "" && contrasena.Trim() != "")
         {
             userDto.Proyecto = proyecto;
-            userDto.UserName = usuario;
+            userDto.UserName = usuario.ToUpper();
             userDto.Password = contrasena;
+            usuario = "";
+            contrasena = "";
             result = await Http.PostAsJsonAsync("http://neo.paveca.com.ve/Authentication/api/Auth/Login", userDto);
             validarToken = await result.Content.ReadAsStringAsync();
 

@@ -5,7 +5,7 @@
 <PageTitle>Historial de Dispocisión de Producto No Conforme</PageTitle>
 
 
-<AuthorizeView Roles="SuperAdmin,SuperUser,Calidad" Context="autorized">
+<AuthorizeView Roles="SuperAdmin,SuperUser,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad" Context="autorized">
     <Authorized>
 
         <RadzenFieldset Text="Filtro">
@@ -13,12 +13,12 @@
                 <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                     <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
                         <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
-                            <RadzenDatePicker Name="fechaEmicionInicio" @bind-Value=fechaEmicionInicio ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy" />
+                            <RadzenDatePicker Name="fechaEmicionInicio" @bind-Value=fechaEmicionInicio  DateFormat="MM/dd/yyyy" />
                         </RadzenFormField>
                     </RadzenColumn>
                     <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
                         <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
-                            <RadzenDatePicker Name="fechaEmicionFinal" @bind-Value=fechaEmicionFinal ShowTime="true" ShowSeconds="true" HoursStep="1.5" MinutesStep="5" SecondsStep="10" DateFormat="MM/dd/yyyy" />
+                            <RadzenDatePicker Name="fechaEmicionFinal" @bind-Value=fechaEmicionFinal  DateFormat="MM/dd/yyyy" />
                         </RadzenFormField>
                     </RadzenColumn>
                     <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
@@ -28,7 +28,7 @@
             </RadzenStack>
         </RadzenFieldset>
 
-        <div class="table">
+        <div class="table mt-5">
             <RadzenDataGrid @ref="ordersProductoNoConforme" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true" 
                         Data="@listaProductoNoConforme" TItem="ProductoNoConforme" >
                 <Columns>
@@ -37,7 +37,7 @@
                             <RadzenText class="mb-0 tipografia">@(listaProductoNoConforme.IndexOf(data) + 1)</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn  TItem="ProductoNoConforme" Property="Fecha" Title="Fecha">
+                    <RadzenDataGridColumn Width="9%" TItem="ProductoNoConforme" Property="Fecha" Title="Fecha">
                         <Template Context="order">
                             <RadzenText class="mb-0 tipografia">@order.Fecha.ToString("MM/dd/yyyy")</RadzenText>
                         </Template>
@@ -52,7 +52,7 @@
                             <RadzenText class="mb-0 tipografia">@order.DescripcionDeProducto</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn  TItem="ProductoNoConforme" Property="Tipo" Title="Tipo">
+                    <RadzenDataGridColumn Width="8%" TItem="ProductoNoConforme" Property="Tipo" Title="Tipo">
                         <Template Context="order">
                             <RadzenText class="mb-0 tipografia">@order.Tipo</RadzenText>
                         </Template>
@@ -62,21 +62,26 @@
                             <RadzenText class="mb-0 tipografia">@order.LugarEvento</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Causante" Title="Reponsable / Causante">
+                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Causante" Title="Causante">
                         <Template Context="order">
                             <RadzenText class="mb-0 tipografia">@order.Causante</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Cantidad" Title="Cantidad">
+                    <RadzenDataGridColumn  TItem="ProductoNoConforme" Property="Cantidad" Title="Cantidad">
                         <Template Context="order">
                             <RadzenText class="mb-0 tipografia">@order.Cantidad  @order.Unidad</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Cantidad" Title="Cantidad">
+                    @* <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Identificacion" Title="Identificacion">
                         <Template Context="order">
-                            <RadzenText class="mb-0 tipografia">@order.Cantidad  @order.Unidad</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@order.Identificacion</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
+                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Riesgo" Title="Riesgo">
+                        <Template Context="order">
+                            <RadzenText class="mb-0 tipografia">@order.Riesgo</RadzenText>
+                        </Template>
+                    </RadzenDataGridColumn> *@
                 </Columns>
             </RadzenDataGrid>
         </div>
