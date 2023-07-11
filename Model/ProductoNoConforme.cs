@@ -7,7 +7,7 @@ public partial class ProductoNoConforme
 {
     public int IdRegistro { get; set; }
 
-    public string? Consecutivo { get; set; }
+    public string Consecutivo { get; set; } = null!;
 
     public string CodigoDeProducto { get; set; } = null!;
 
@@ -15,15 +15,15 @@ public partial class ProductoNoConforme
 
     public string? Lote { get; set; }
 
-    public string NoConformidad { get; set; } = null!;
+    public string? OrdenDeFabricacion { get; set; }
 
-    public string? Causa { get; set; }
+    public string NoConformidad { get; set; } = null!;
 
     public int Cantidad { get; set; }
 
-    public string? CausaDeLiberación { get; set; }
+    public string CausaDeLiberación { get; set; } = null!;
 
-    public string? IndicacionDeLiberacion { get; set; }
+    public string IndicacionDeLiberacion { get; set; } = null!;
 
     public string FichaDelCargador { get; set; } = null!;
 

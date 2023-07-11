@@ -7,7 +7,7 @@ public partial class ProNoCon
 {
     public int IdProNoCon { get; set; }
 
-    public string? Pncconsecu { get; set; }
+    public string Pncconsecu { get; set; } = null!;
 
     public string PnccodProd { get; set; } = null!;
 
@@ -17,13 +17,11 @@ public partial class ProNoCon
 
     public string Pncinconfo { get; set; } = null!;
 
-    public string? Pnccausa { get; set; }
-
     public int Pnccantida { get; set; }
 
-    public string? PnccauLibe { get; set; }
+    public string PnccauLibe { get; set; } = null!;
 
-    public string? PncindLibe { get; set; }
+    public string PncindLibe { get; set; } = null!;
 
     public string Pnccargador { get; set; } = null!;
 
@@ -46,6 +44,8 @@ public partial class ProNoCon
     public int IdLugaEven { get; set; }
 
     public DateTime Pncfecha { get; set; }
+
+    public string? PncordFabr { get; set; }
 
     public virtual Pnccausante IdCausanteNavigation { get; set; } = null!;
 

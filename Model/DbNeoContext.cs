@@ -45,6 +45,9 @@ public partial class DbNeoContext : DbContext
 
     public virtual DbSet<ProductoNoConforme> ProductoNoConformes { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=10.20.1.60\\DESARROLLO;Initial Catalog=DbNeo;TrustServerCertificate=True;Persist Security Info=True;User ID=UsrEncuesta;Password=Enc2022**Ing");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -319,9 +322,6 @@ public partial class DbNeoContext : DbContext
             entity.Property(e => e.PnccauLibe)
                 .IsUnicode(false)
                 .HasColumnName("PNCCauLibe");
-            entity.Property(e => e.Pnccausa)
-                .IsUnicode(false)
-                .HasColumnName("PNCCausa");
             entity.Property(e => e.PnccodProd)
                 .HasMaxLength(100)
                 .IsUnicode(false)
@@ -347,6 +347,10 @@ public partial class DbNeoContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("PNCLote");
+            entity.Property(e => e.PncordFabr)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("PNCOrdFabr");
 
             entity.HasOne(d => d.IdCausanteNavigation).WithMany(p => p.ProNoCons)
                 .HasForeignKey(d => d.IdCausante)
@@ -404,7 +408,6 @@ public partial class DbNeoContext : DbContext
                 .HasMaxLength(80)
                 .IsUnicode(false)
                 .HasColumnName("Alternativa Propuesto De Disposicion");
-            entity.Property(e => e.Causa).IsUnicode(false);
             entity.Property(e => e.CausaDeLiberación)
                 .IsUnicode(false)
                 .HasColumnName("Causa de Liberación");
@@ -450,6 +453,10 @@ public partial class DbNeoContext : DbContext
             entity.Property(e => e.NoConformidad)
                 .IsUnicode(false)
                 .HasColumnName("No Conformidad");
+            entity.Property(e => e.OrdenDeFabricacion)
+                .HasMaxLength(100)
+                .IsUnicode(false)
+                .HasColumnName("Orden de Fabricacion");
             entity.Property(e => e.Riesgo)
                 .HasMaxLength(80)
                 .IsUnicode(false);

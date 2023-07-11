@@ -20,14 +20,14 @@
 <AuthorizeView Roles="SuperAdmin,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad,SuperUser" Context="autorized">
    <Authorized>
         @if(isCargado){
-            <RadzenText TextStyle="TextStyle.DisplayH5"  class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">Dispocisión De Producto No Conforme</RadzenText>
+            <RadzenText TextStyle="TextStyle.DisplayH5"  class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">Disposición De Producto No Conforme</RadzenText>
 
             <RadzenTemplateForm TItem="ProNoCon" Data=@registro Submit=@OK>
 
                 <RadzenFieldset Text="Formulario">
                     <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
-                            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenColumn Size="12" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
                                     <RadzenDatePicker Name="FECHA" @bind-Value=registro.Pncfecha DateFormat="MM/dd/yyyy" />
                                 </RadzenFormField>
@@ -36,20 +36,24 @@
 
                             <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CONSECUTIVO">
-                                    <RadzenTextBox @bind-Value=registro.Pncconsecu  class="w-100" />
+                                    <RadzenTextBox Name="CONSECUTIVO" @bind-Value=registro.Pncconsecu  class="w-100" />
                                 </RadzenFormField>
                             </RadzenColumn>
-                            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenColumn Size="12" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="TIPO">
                                     <RadzenDropDown AllowClear="true" Name="TIPO" @bind-Value=registro.IdTipo AllowVirtualization="true" AllowFiltering="true" Data=@listaTipo TextProperty="Tnombre" ValueProperty="IdTipo" Style="width: 100%;" /> 
                                 </RadzenFormField>
                                 <RadzenCustomValidator Component="TIPO" Validator="@(() => registro.IdTipo != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
                             </RadzenColumn> 
-                            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenColumn Size="12" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="LOTE">
                                     <RadzenTextBox  @bind-Value=registro.Pnclote class="w-100" />
                                 </RadzenFormField>
-                            
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="ORDEN DE FABRICACIÓN">
+                                    <RadzenTextBox  @bind-Value=registro.PncordFabr class="w-100" />
+                                </RadzenFormField>
                             </RadzenColumn>
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
@@ -101,13 +105,6 @@
                             </RadzenColumn>
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
-                            <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
-                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CAUSA">
-                                    <RadzenTextArea Cols="30" Rows="3"  @bind-Value=registro.Pnccausa class="w-100"/>
-                                </RadzenFormField>
-                            </RadzenColumn>
-                        </RadzenRow>
-                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                             <RadzenColumn Size="12" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenLabel Text="IDENTIFICACIÓN" />
                             </RadzenColumn>
@@ -144,15 +141,17 @@
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                             <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CAUSA DE LIBERACIÓN">
-                                    <RadzenTextArea Cols="30" Rows="3"  @bind-Value=registro.PnccauLibe class="w-100"/>
+                                    <RadzenTextArea Cols="30" Rows="3" Name="causaLib" @bind-Value=registro.PnccauLibe class="w-100"/>
                                 </RadzenFormField>
+                                <RadzenRequiredValidator Component="causaLib" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                             <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="INDICACIONES DE LIBERACIÓN">
-                                    <RadzenTextArea Cols="30" Rows="3"  @bind-Value=registro.PncindLibe class="w-100"/>
+                                    <RadzenTextArea Cols="30" Name="indLib" Rows="3"  @bind-Value=registro.PncindLibe class="w-100"/>
                                 </RadzenFormField>
+                                <RadzenRequiredValidator Component="indLib" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">

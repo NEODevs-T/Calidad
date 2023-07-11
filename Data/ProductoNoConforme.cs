@@ -207,7 +207,7 @@ namespace Calidad.ProductoNoConforme
                 data.Pnccantida = registro.Pnccantida;
                 data.Pnccargador = registro.Pnccargador;
                 data.PnccauLibe = registro.PnccauLibe;
-                data.Pnccausa = registro.Pnccausa;
+                data.PncordFabr = registro.PncordFabr;
                 data.PnccodProd = registro.PnccodProd;
                 data.Pncconsecu = registro.Pncconsecu;
                 data.PncdesProd = registro.PncdesProd;
