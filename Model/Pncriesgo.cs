@@ -12,6 +12,4 @@ public partial class Pncriesgo
     public string? Rdescri { get; set; }
 
     public bool Restado { get; set; }
-
-    public virtual ICollection<ProNoCon> ProNoCons { get; set; } = new List<ProNoCon>();
 }

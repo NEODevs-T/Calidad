@@ -7,8 +7,6 @@ public partial class ProductoNoConforme
 {
     public int IdRegistro { get; set; }
 
-    public string Consecutivo { get; set; } = null!;
-
     public string CodigoDeProducto { get; set; } = null!;
 
     public string DescripcionDeProducto { get; set; } = null!;
@@ -32,8 +30,6 @@ public partial class ProductoNoConforme
     public string DisposicionDefinitiva { get; set; } = null!;
 
     public string Estado { get; set; } = null!;
-
-    public string Riesgo { get; set; } = null!;
 
     public string Causante { get; set; } = null!;
 

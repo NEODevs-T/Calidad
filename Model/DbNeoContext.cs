@@ -326,10 +326,6 @@ public partial class DbNeoContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("PNCCodProd");
-            entity.Property(e => e.Pncconsecu)
-                .HasMaxLength(50)
-                .IsUnicode(false)
-                .HasColumnName("PNCConsecu");
             entity.Property(e => e.PncdesProd)
                 .HasMaxLength(500)
                 .IsUnicode(false)
@@ -369,7 +365,6 @@ public partial class DbNeoContext : DbContext
 
             entity.HasOne(d => d.IdIdentifNavigation).WithMany(p => p.ProNoCons)
                 .HasForeignKey(d => d.IdIdentif)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProNoCon_PNCIdentif");
 
             entity.HasOne(d => d.IdLugaEvenNavigation).WithMany(p => p.ProNoCons)
@@ -381,11 +376,6 @@ public partial class DbNeoContext : DbContext
                 .HasForeignKey(d => d.IdProDisp)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProNoCon_PNCProDisp");
-
-            entity.HasOne(d => d.IdRiesgoNavigation).WithMany(p => p.ProNoCons)
-                .HasForeignKey(d => d.IdRiesgo)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ProNoCon_PNCRiesgo");
 
             entity.HasOne(d => d.IdTipoNavigation).WithMany(p => p.ProNoCons)
                 .HasForeignKey(d => d.IdTipo)
@@ -418,9 +408,6 @@ public partial class DbNeoContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("Codigo de Producto");
-            entity.Property(e => e.Consecutivo)
-                .HasMaxLength(50)
-                .IsUnicode(false);
             entity.Property(e => e.DescripcionDeProducto)
                 .HasMaxLength(500)
                 .IsUnicode(false)
@@ -457,9 +444,6 @@ public partial class DbNeoContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("Orden de Fabricacion");
-            entity.Property(e => e.Riesgo)
-                .HasMaxLength(80)
-                .IsUnicode(false);
             entity.Property(e => e.Tipo)
                 .HasMaxLength(80)
                 .IsUnicode(false);

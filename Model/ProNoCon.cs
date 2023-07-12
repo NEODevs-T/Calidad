@@ -7,8 +7,6 @@ public partial class ProNoCon
 {
     public int IdProNoCon { get; set; }
 
-    public string Pncconsecu { get; set; } = null!;
-
     public string PnccodProd { get; set; } = null!;
 
     public string PncdesProd { get; set; } = null!;
@@ -31,13 +29,11 @@ public partial class ProNoCon
 
     public int IdEstado { get; set; }
 
-    public int IdRiesgo { get; set; }
-
     public int IdCausante { get; set; }
 
     public int IdUnidad { get; set; }
 
-    public int IdIdentif { get; set; }
+    public int? IdIdentif { get; set; }
 
     public int IdProDisp { get; set; }
 
@@ -53,13 +49,11 @@ public partial class ProNoCon
 
     public virtual Pncestado IdEstadoNavigation { get; set; } = null!;
 
-    public virtual Pncidentif IdIdentifNavigation { get; set; } = null!;
+    public virtual Pncidentif? IdIdentifNavigation { get; set; }
 
     public virtual Linea IdLugaEvenNavigation { get; set; } = null!;
 
     public virtual PncproDisp IdProDispNavigation { get; set; } = null!;
-
-    public virtual Pncriesgo IdRiesgoNavigation { get; set; } = null!;
 
     public virtual Pnctipo IdTipoNavigation { get; set; } = null!;
 

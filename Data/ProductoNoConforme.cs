@@ -201,7 +201,6 @@ namespace Calidad.ProductoNoConforme
                 data.IdIdentif = registro.IdIdentif;
                 data.IdLugaEven = registro.IdLugaEven;
                 data.IdProDisp = registro.IdProDisp;
-                data.IdRiesgo = registro.IdRiesgo;
                 data.IdTipo = registro.IdTipo;
                 data.IdUnidad = registro.IdUnidad;
                 data.Pnccantida = registro.Pnccantida;
@@ -209,7 +208,6 @@ namespace Calidad.ProductoNoConforme
                 data.PnccauLibe = registro.PnccauLibe;
                 data.PncordFabr = registro.PncordFabr;
                 data.PnccodProd = registro.PnccodProd;
-                data.Pncconsecu = registro.Pncconsecu;
                 data.PncdesProd = registro.PncdesProd;
                 data.Pncfecha = registro.Pncfecha;
                 data.Pncinconfo = registro.Pncinconfo;
