@@ -1,0 +1,247 @@
+@page "/detalles/{id:int}"
+
+@inject NotificationService NotificationService
+@inject NavigationManager NavigationManager
+@inject IDataPNCCausante DataPNCCausante
+@inject IDataPNCDisposicionDefinitiva DataPNCDisposicionDefinitiva
+@inject IDataPNCIdentificacion DataPNCIdentificacion
+@inject IDataPNCPropuestaDisposicion DataPNCPropuestaDisposicion
+@inject IDataPNCRiesgo DataPNCRiesgo
+@inject IDataPNCUnidad DataPNCUnidad
+@inject IDataProductoNoConforme DataProductoNoConforme
+@inject IDataPNCTipo DataPNCTipo
+@inject IDataLinea DataLinea
+@inject IJSRuntime JS
+
+<PageTitle>Dispocisión de Producto No Conforme</PageTitle>
+
+
+
+<AuthorizeView Roles="SuperAdmin,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad,SuperUser" Context="autorized">
+   <Authorized>
+        @if(isCargado){
+            <RadzenText TextStyle="TextStyle.DisplayH5"  class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">Disposición De Producto No Conforme</RadzenText>
+
+
+                <RadzenFieldset id="Imprimible" Text="Formulario" >
+                    <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
+                                    <RadzenDatePicker  Disabled="@IsDisable" Name="FECHA" @bind-Value=registro.Pncfecha DateFormat="MM/dd/yyyy" />
+                                </RadzenFormField>
+                                <RadzenRequiredValidator Component="FECHA" Text="Requerido" Popup=@popup Style="position: relative"/>
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="TIPO">
+                                    <RadzenDropDown  Disabled="@IsDisable" AllowClear="true" Name="TIPO" @bind-Value=registro.IdTipo AllowVirtualization="true" AllowFiltering="true" Data=@listaTipo TextProperty="Tnombre" ValueProperty="IdTipo" Style="width: 100%;" /> 
+                                </RadzenFormField>
+                                <RadzenCustomValidator Component="TIPO" Validator="@(() => registro.IdTipo != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
+                            </RadzenColumn> 
+                            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="LOTE">
+                                    <RadzenTextBox  Disabled="@IsDisable" @bind-Value=registro.Pnclote class="w-100" />
+                                </RadzenFormField>
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="ORDEN DE FABRICACIÓN">
+                                    <RadzenTextBox  Disabled="@IsDisable"  @bind-Value=registro.PncordFabr class="w-100" />
+                                </RadzenFormField>
+                            </RadzenColumn>
+                        </RadzenRow>
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CÓDIGO ERP">
+                                    <RadzenTextBox  Disabled="@IsDisable" Name="CODIGOERP" @bind-Value=registro.PnccodProd  class="w-100" />
+                                </RadzenFormField>
+                                <RadzenRequiredValidator Component="CODIGOERP" Text="Requerido" Popup=@popup Style="position: relative"/>
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="8" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="DESCRIPCIÓN ERP">
+                                    <RadzenTextArea  Disabled="@IsDisable" Name="DESCRIPCIONERP" @bind-Value=registro.PncdesProd Cols="30" Rows="1"  class="w-100"/>
+                                </RadzenFormField>
+                                <RadzenRequiredValidator Component="DESCRIPCIONERP" Text="Requerido" Popup=@popup Style="position: relative"/>
+                            </RadzenColumn>
+                        </RadzenRow>
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="LUGAR EVENTO">
+                                    <RadzenDropDown  Disabled="@IsDisable" Name="LUGAREVENTO" AllowClear="true" @bind-Value=registro.IdLugaEven AllowVirtualization="true" AllowFiltering="true" Data=@listaEventos TextProperty="Lnom" ValueProperty="IdLinea"  Style="width: 100%;" /> 
+                                </RadzenFormField>
+                                <RadzenCustomValidator Component="LUGAREVENTO" Validator="@(() => registro.IdLugaEven != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="RESPONSABLE / CAUSANTE">
+                                    <RadzenDropDown  Disabled="@IsDisable" Name="CAUSANTE" AllowClear="true" @bind-Value=registro.IdCausante TextProperty="Cnombre" ValueProperty="IdCausante" AllowVirtualization="true" AllowFiltering="true" Data=@listaCausante  Style="width: 100%;" /> 
+                                </RadzenFormField>
+                                <RadzenCustomValidator Component="CAUSANTE" Validator="@(() => registro.IdCausante != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="6" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CANTIDAD">
+                                    <RadzenNumeric  Disabled="@IsDisable" Min="1" Name="CANTIDAD" @bind-Value=registro.Pnccantida />
+                                </RadzenFormField>
+                                <RadzenRequiredValidator Component="CANTIDAD" Text="Requerido" Popup=@popup Style="position: relative"/>
+                            </RadzenColumn>
+                            <RadzenColumn Size="6" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="UNIDAD">
+                                    <RadzenDropDown  Disabled="@IsDisable" AllowClear="true" Name="UNIDAD" @bind-Value=registro.IdUnidad AllowVirtualization="true" AllowFiltering="true" Data=@listaUnidad TextProperty="Unombre" ValueProperty="IdUnidad" Style="width: 100%;" /> 
+                                </RadzenFormField>
+                                <RadzenCustomValidator Component="UNIDAD" Validator="@(() => registro.IdUnidad != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="NO CONFORMIDAD">
+                                    <RadzenTextArea  Disabled="@IsDisable" Cols="30" Rows="3" Name="NOCONFORMIDAD"  @bind-Value=registro.Pncinconfo class="w-100"/>
+                                </RadzenFormField>
+                                <RadzenRequiredValidator Component="NOCONFORMIDAD" Text="Requerido" Popup=@popup Style="position: relative"/>
+                            </RadzenColumn>
+                        </RadzenRow>
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenLabel Text="IDENTIFICACIÓN" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenRadioButtonList  Disabled="@IsDisable" Name="IDENTIFICACIÓN" Data="@listaIdentificacion" @bind-Value=registro.IdIdentif TextProperty="Inombre" ValueProperty="IdIdentif" class="w-100" />
+                            </RadzenColumn>
+                            <RadzenRequiredValidator Component="IDENTIFICACIÓN" Text="Requerido" Popup=@popup Style="position: relative"/>
+                        </RadzenRow>
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="ALTERNATIVA PROPUESTA DE DISPOSICIÓN">
+                                    <RadzenDropDown  Disabled="@IsDisable" Name="DISPOSICIÓNPROPUESTA" AllowClear="true" @bind-Value=registro.IdProDisp TextProperty="Pdnombre" ValueProperty="IdProDisp" AllowVirtualization="true" AllowFiltering="true" Data=@listaPropuestaDisposicion  Style="width: 100%;" /> 
+                                </RadzenFormField>
+                                <RadzenCustomValidator Component="DISPOSICIÓNPROPUESTA" Validator="@(() => registro.IdProDisp != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenLabel Text="DISPOSICIÓN DEFINITIVA" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="9" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenRadioButtonList  Disabled="@IsDisable" Name="DISPOSICIÓNDEFINITIVA" Data="@listaDisposicionDefinitiva" @bind-Value=registro.IdDisDefi TextProperty="Ddnombre" ValueProperty="IdDisDefi" class="w-100" />
+                            </RadzenColumn>
+                            <RadzenRequiredValidator Component="DISPOSICIÓNDEFINITIVA" Text="Requerido" Popup=@popup Style="position: relative"/>
+                        </RadzenRow>
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CAUSA DE LIBERACIÓN">
+                                    <RadzenTextArea Disabled="@IsDisable" Cols="30" Rows="3" Name="causaLib" @bind-Value=registro.PnccauLibe class="w-100"/>
+                                </RadzenFormField>
+                                <RadzenRequiredValidator Component="causaLib" Text="Requerido" Popup=@popup Style="position: relative"/>
+                            </RadzenColumn>
+                        </RadzenRow>
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField   Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="INDICACIONES DE LIBERACIÓN">
+                                    <RadzenTextArea Disabled="@IsDisable" Cols="30" Name="indLib" Rows="3"  @bind-Value=registro.PncindLibe class="w-100"/>
+                                </RadzenFormField>
+                                <RadzenRequiredValidator Component="indLib" Text="Requerido" Popup=@popup Style="position: relative"/>
+                            </RadzenColumn>
+                        </RadzenRow>
+                        <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabledButton" Click=Imprimir Text="Imprimir" ButtonStyle="ButtonStyle.Warning" />
+                                <RadzenButton ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabledButton" Click=Atras Text="Atras" ButtonStyle="ButtonStyle.Danger" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                    </RadzenStack>
+                </RadzenFieldset>
+        }else{
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <RadzenRow class="carga" JustifyContent="JustifyContent.Center">
+                    <RadzenColumn Size="3">
+                        <div class="loader"></div>
+                    </RadzenColumn>  
+            </RadzenRow>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
+            No tiene Acceso a este modulo
+        </RadzenText>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code{
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    
+    [Parameter]
+    public int id { get; set; }
+    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
+    private ProNoCon registro {get; set;}  = new ProNoCon();
+    private List<Pnccausante>? listaCausante {get; set;} 
+    private List<PncdisDefi>? listaDisposicionDefinitiva {get; set;} 
+    private List<Pncidentif>? listaIdentificacion {get; set;} 
+    private List<PncproDisp>? listaPropuestaDisposicion {get; set;}
+    private List<Pncriesgo>? listaRiesgo {get; set;}
+    private List<Pncunidad>? listaUnidad {get; set;}
+    private List<Pnctipo>? listaTipo {get; set;}
+    private string ficha { get; set;} = "";
+    private int idEmpresa { get; set; }
+    private bool isDisabledButton {get; set;} = false;
+    private bool popup {get; set;} = false;
+    private bool isEstado {get; set;} 
+    private bool isCargado {get; set;} 
+    private bool IsDisable {get; set;} = true;
+    private List<Linea>? listaEventos {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        isCargado = false;
+        if (authenticationState is not null)
+        {
+            AuthenticationState? authState = await authenticationState;
+            ClaimsPrincipal? user = authState?.User;
+            if (user?.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                claims = user.Claims;
+                
+                idEmpresa = int.Parse(user.FindFirst(c => c.Type == "IdEmpresa")?.Value ?? "0") ;
+                ficha = user.FindFirst(c => c.Type == "Ficha")?.Value ?? "" ;
+
+                
+                registro = await DataProductoNoConforme.ObtenerProductoNoConforme(id);
+                listaCausante = await DataPNCCausante.ObtenerTodosLosCausantes();
+                listaDisposicionDefinitiva = await DataPNCDisposicionDefinitiva.ObtenerTodosLasDisposicionDefinitiva();
+                listaIdentificacion = await DataPNCIdentificacion.ObtenerTodosLasIdentificaciones();
+                listaPropuestaDisposicion = await DataPNCPropuestaDisposicion.ObtenerTodasLasPropuestaDisposicion();
+                listaRiesgo = await DataPNCRiesgo.ObtenerTodosLosRiesgos();
+                listaUnidad = await DataPNCUnidad.ObtenerTodosLasUnidades();
+                listaTipo = await DataPNCTipo.ObtenerTodosLosTipos();
+                listaEventos = await DataLinea.ObtenerTodasLasLineasDeLaEmpresa(idEmpresa); 
+            }
+        }
+        isCargado = true;
+    }
+
+    
+    protected async Task Atras(){
+        NavigationManager.NavigateTo("HistorialPNC/");
+    }
+    protected async Task Imprimir(){
+        NavigationManager.NavigateTo($"/impresion/{id}");
+    }
+    public void Notificacion(string tipo,string mensaje,string detalle)
+    {
+
+        NotificationMessage notificacion = new NotificationMessage{};
+        if(tipo == "error"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "info"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "exito"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "advertencia"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }
+        NotificationService.Notify(notificacion);
+    } 
+}

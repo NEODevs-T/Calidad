@@ -1,0 +1,173 @@
+@layout Vacio
+@page "/impresion/{id:int}"
+
+@inject NotificationService NotificationService
+@inject NavigationManager NavigationManager
+@inject IDataPNCCausante DataPNCCausante
+@inject IDataPNCDisposicionDefinitiva DataPNCDisposicionDefinitiva
+@inject IDataPNCIdentificacion DataPNCIdentificacion
+@inject IDataPNCPropuestaDisposicion DataPNCPropuestaDisposicion
+@inject IDataPNCRiesgo DataPNCRiesgo
+@inject IDataPNCUnidad DataPNCUnidad
+@inject IDataProductoNoConforme DataProductoNoConforme
+@inject IDataPNCTipo DataPNCTipo
+@inject IDataLinea DataLinea
+@inject IJSRuntime JS
+
+<style>
+</style>
+
+<PageTitle>Dispocisión de Producto No Conforme</PageTitle>
+
+
+
+<AuthorizeView Roles="SuperAdmin,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad,SuperUser" Context="autorized">
+   <Authorized>
+    @if(registro.IdTipoNavigation != null){
+                        <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 800px">
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
+                            <RadzenStack Gap="0">
+                                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-2 rz-my-0">ERP</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1"><b>@registro.PnccodProd - @registro.PncdesProd</b></RadzenText>
+                                <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">Fecha</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1"><b>@registro.Pncfecha</b></RadzenText>
+                            </RadzenStack>
+                            <RadzenRow style="width: 100%;" class="rz-display-flex rz-justify-content-end rz-align-items-top" RowGap="0">
+                                <RadzenImage Path="./img/paveca.png"  Style="width: 80px; height: 80px;" />
+                            </RadzenRow>
+                        </RadzenStack>
+                        <RadzenCard class="rz-background-color-white rz-shadow-0 rz-border-radius-0 rz-p-8" style="margin: 1rem calc(-1 * var(--rz-card-padding));">
+                            <RadzenText TextStyle="TextStyle.H6" class="rz-color-on-primary-light"><strong>Datos</strong></RadzenText>
+                            <RadzenRow RowGap="0">
+                                <RadzenColumn>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Tipo</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdTipoNavigation.Tnombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Lote</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.Pnclote</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Orden de Fabricacion</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.PncordFabr</b></RadzenText>
+                                </RadzenColumn>
+                                <RadzenColumn >
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Lugas del Evento</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdLugaEvenNavigation.Lnom</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Reponsable</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdCausanteNavigation.Cnombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Cantidad</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.Pnccantida @registro.IdUnidadNavigation.Unombre</b></RadzenText>
+                                </RadzenColumn>
+                                <RadzenColumn>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Identificacion</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdIdentifNavigation.Inombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Alternativa Propuesta de Disposición</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdProDispNavigation.Pdnombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Disposición Definitiva</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdDisDefiNavigation.Ddnombre</b></RadzenText>
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenCard>
+                        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Left" Gap="0">
+                            <RadzenRow RowGap="0">
+                                <RadzenColumn >
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-5 rz-mb-0">No Conformidad</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" ><b>@registro.Pncinconfo</b></RadzenText>  
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-5 rz-mb-0">Causa de Liberación</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" ><b>@registro.PnccauLibe</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-5 rz-mb-0">Indicación de Liberación</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" ><b>@registro.PncindLibe</b></RadzenText> 
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow RowGap="0"  Style="width:100%;" class="rz-display-flex rz-justify-content-end rz-align-items-end" JustifyContent="JustifyContent.End">
+                                <RadzenImage Path="./img/Neo.png"  Style="width: 50px; height: 50px;" />
+                            </RadzenRow>
+                        </RadzenStack>
+                    </RadzenCard>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
+            No tiene Acceso a este modulo
+        </RadzenText>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@code{
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    
+    [Parameter]
+    public int id { get; set; }
+    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
+    private ProNoCon registro {get; set;}  = new ProNoCon();
+    private List<Pnccausante>? listaCausante {get; set;} 
+    private List<PncdisDefi>? listaDisposicionDefinitiva {get; set;} 
+    private List<Pncidentif>? listaIdentificacion {get; set;} 
+    private List<PncproDisp>? listaPropuestaDisposicion {get; set;}
+    private List<Pncriesgo>? listaRiesgo {get; set;}
+    private List<Pncunidad>? listaUnidad {get; set;}
+    private List<Pnctipo>? listaTipo {get; set;}
+    private string ficha { get; set;} = "";
+    private int idEmpresa { get; set; }
+    private int n { get; set; }
+    private bool isDisabledButton {get; set;} = false;
+    private bool popup {get; set;} = false;
+    private bool isEstado {get; set;} 
+    private bool isCargado {get; set;} 
+    private bool IsDisable {get; set;} = true;
+    private List<Linea>? listaEventos {get; set;}
+
+    protected override async Task OnInitializedAsync()
+    {
+        isCargado = false;
+        if (authenticationState is not null)
+        {
+            AuthenticationState? authState = await authenticationState;
+            ClaimsPrincipal? user = authState?.User;
+            if (user?.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                claims = user.Claims;
+                
+                idEmpresa = int.Parse(user.FindFirst(c => c.Type == "IdEmpresa")?.Value ?? "0") ;
+                ficha = user.FindFirst(c => c.Type == "Ficha")?.Value ?? "" ;
+
+                
+                registro = await DataProductoNoConforme.ObtenerProductoNoConformeConTodaLaData(id);
+                @* listaCausante = await DataPNCCausante.ObtenerTodosLosCausantes();
+                listaDisposicionDefinitiva = await DataPNCDisposicionDefinitiva.ObtenerTodosLasDisposicionDefinitiva();
+                listaIdentificacion = await DataPNCIdentificacion.ObtenerTodosLasIdentificaciones();
+                listaPropuestaDisposicion = await DataPNCPropuestaDisposicion.ObtenerTodasLasPropuestaDisposicion();
+                listaRiesgo = await DataPNCRiesgo.ObtenerTodosLosRiesgos();
+                listaUnidad = await DataPNCUnidad.ObtenerTodosLasUnidades();
+                listaTipo = await DataPNCTipo.ObtenerTodosLosTipos();
+                listaEventos = await DataLinea.ObtenerTodasLasLineasDeLaEmpresa(idEmpresa);  *@
+                isCargado = true;
+            }
+        }
+    }
+
+    protected override void OnAfterRender(bool firstRender)
+    {
+        if((registro.IdProNoCon != 0)){
+            n = 2;
+            JS.InvokeVoidAsync("imprimirElemento");
+            NavigationManager.NavigateTo("HistorialPNC");
+        }
+    }
+    
+    public void Notificacion(string tipo,string mensaje,string detalle)
+    {
+
+        NotificationMessage notificacion = new NotificationMessage{};
+        if(tipo == "error"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Error, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "info"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Info, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "exito"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Success, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }else if(tipo == "advertencia"){
+            notificacion = new NotificationMessage { Severity = NotificationSeverity.Warning, Summary = mensaje, Detail = detalle, Duration = 8000 };
+        }
+        NotificationService.Notify(notificacion);
+    } 
+}

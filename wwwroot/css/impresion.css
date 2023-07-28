@@ -1,0 +1,11 @@
+.labelImpresion{
+    background: rgb(0, 120, 83);
+    padding: 2%;
+    margin-button: 1%;
+    color: white;
+    font-size: 1em;
+    font-weight:bold;
+}
+.datoImpresion{
+    width: 100%;
+}

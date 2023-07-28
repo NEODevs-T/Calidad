@@ -167,9 +167,9 @@ namespace Calidad.ProductoNoConforme
     public interface IDataProductoNoConforme
     {
         Task<bool> InsertarProductoNoConforme(ProNoCon registro);
-
         Task<bool> ActualizarProductoNoConforme(int idProNoCon, ProNoCon registro);
-
+        Task<ProNoCon?> ObtenerProductoNoConforme(int idRegistro);
+        Task<ProNoCon?> ObtenerProductoNoConformeConTodaLaData(int idRegistro);
         Task<List<Calidad.Model.ProductoNoConforme>> ObtenerProductoNoConformePorFecha(DateTime Fecha);
 
         Task<List<Calidad.Model.ProductoNoConforme>> ObtenerProductoNoConformeEntreFechas(DateTime FechaInicio, DateTime FechaFinal);
@@ -234,6 +234,14 @@ namespace Calidad.ProductoNoConforme
             }
             return await this.ObtenerProductoNoConformeEntreFechas(fechaFinal,fechaInicio);
 
+        }
+
+        public async Task<ProNoCon?> ObtenerProductoNoConforme(int idRegistro){
+            return await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idRegistro).FirstOrDefaultAsync();
+        }
+        public async Task<ProNoCon?> ObtenerProductoNoConformeConTodaLaData(int idRegistro){
+            var reg = await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idRegistro).Include(p => p.IdCausanteNavigation).Include(p => p.IdDisDefiNavigation).Include(p => p.IdEstadoNavigation).Include(p => p.IdIdentifNavigation).Include(p => p.IdLugaEvenNavigation).Include(p => p.IdProDispNavigation).Include(p => p.IdTipoNavigation).Include(p => p.IdUnidadNavigation).FirstOrDefaultAsync();
+            return reg;
         }
     }
 
