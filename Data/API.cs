@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 
 
-namespace TiempoPerdido.Data.API
+namespace Global.Data.API
 {
     public interface IDataAPI
     {
@@ -10,6 +10,7 @@ namespace TiempoPerdido.Data.API
         Task<List<string>?> ObtenerTurnoYGrupo();
         Task<Dictionary<string,string>?> ObtenerProductosActuales(string centroCostoLinea);
         Task<Dictionary<string,string>?> ObtenerProductosActualesConOrdenesAbiertas(string centroCostoLinea);
+        Task<string?> ObtenerDescripciondeProducto(string codProducto);
     }
 
     public class DataAPI : IDataAPI
@@ -48,7 +49,12 @@ namespace TiempoPerdido.Data.API
             return producto;
         }
 
-        
-
+        public async Task<string?> ObtenerDescripciondeProducto(string codProducto){
+            string producto;
+            string url = "http://neo.paveca.com.ve/NeoApi/BPCS/ObtenerDescripcionDelProductoPorSuCodigo/" + codProducto;
+            producto = await cliente.GetFromJsonAsync<string>(url) ?? "";
+            return producto;
+        }
+    
     }   
 }

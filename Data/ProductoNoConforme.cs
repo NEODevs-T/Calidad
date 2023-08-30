@@ -210,7 +210,7 @@ namespace Calidad.ProductoNoConforme
                 data.PnccodProd = registro.PnccodProd;
                 data.PncdesProd = registro.PncdesProd;
                 data.Pncfecha = registro.Pncfecha;
-                data.Pncinconfo = registro.Pncinconfo;
+                data.IdCausa = registro.IdCausa;
                 data.PncindLibe = registro.PncindLibe;
                 data.Pnclote = registro.Pnclote;
                 return 0 < await _cotext.SaveChangesAsync();
@@ -233,17 +233,43 @@ namespace Calidad.ProductoNoConforme
                 return await this.ObtenerProductoNoConformeEntreFechas(fechaInicio,fechaFinal);
             }
             return await this.ObtenerProductoNoConformeEntreFechas(fechaFinal,fechaInicio);
-
         }
 
         public async Task<ProNoCon?> ObtenerProductoNoConforme(int idRegistro){
             return await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idRegistro).FirstOrDefaultAsync();
         }
         public async Task<ProNoCon?> ObtenerProductoNoConformeConTodaLaData(int idRegistro){
-            var reg = await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idRegistro).Include(p => p.IdCausanteNavigation).Include(p => p.IdDisDefiNavigation).Include(p => p.IdEstadoNavigation).Include(p => p.IdIdentifNavigation).Include(p => p.IdLugaEvenNavigation).Include(p => p.IdProDispNavigation).Include(p => p.IdTipoNavigation).Include(p => p.IdUnidadNavigation).FirstOrDefaultAsync();
+            var reg = await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idRegistro).Include(p => p.IdCausanteNavigation).Include(p => p.IdDisDefiNavigation).Include(p => p.IdEstadoNavigation).Include(p => p.IdIdentifNavigation).Include(p => p.IdLugaEvenNavigation).Include(p => p.IdProDispNavigation).Include(p => p.IdTipoNavigation).Include(p => p.IdUnidadNavigation).Include(p => p.IdCausaNavigation).FirstOrDefaultAsync();
             return reg;
         }
     }
 
+    public interface IDataPNCCausa
+    {
+        Task<List<Pnccausa>> ObtenerTodasLasCausas();
+
+        Task<bool> InsertarCausa(Pnccausa registro);
+    }
+
+    public class DataPNCCausa : IDataPNCCausa
+    {
+
+        private readonly DbNeoContext _cotext;
+
+        public DataPNCCausa(DbNeoContext context)
+        {
+            this._cotext = context;
+        }
+
+        public async Task<List<Pnccausa>> ObtenerTodasLasCausas()
+        {
+            return await this._cotext.Pnccausas.Where(p => p.Cestado == true).ToListAsync();
+        }
+
+        public async Task<bool> InsertarCausa(Pnccausa registro){
+            this._cotext.Pnccausas.Add(registro);
+            return await _cotext.SaveChangesAsync() > 0;
+        }
+    }
 
 }

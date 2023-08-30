@@ -25,6 +25,8 @@ public partial class DbNeoContext : DbContext
 
     public virtual DbSet<Pai> Pais { get; set; }
 
+    public virtual DbSet<Pnccausa> Pnccausas { get; set; }
+
     public virtual DbSet<Pnccausante> Pnccausantes { get; set; }
 
     public virtual DbSet<PncdisDefi> PncdisDefis { get; set; }
@@ -169,6 +171,23 @@ public partial class DbNeoContext : DbContext
                 .HasMaxLength(50)
                 .IsUnicode(false)
                 .HasColumnName("PNombre");
+        });
+
+        modelBuilder.Entity<Pnccausa>(entity =>
+        {
+            entity.HasKey(e => e.IdCausa);
+
+            entity.ToTable("PNCCausa");
+
+            entity.Property(e => e.Cdescri)
+                .HasMaxLength(500)
+                .IsUnicode(false)
+                .HasColumnName("CDescri");
+            entity.Property(e => e.Cestado).HasColumnName("CEstado");
+            entity.Property(e => e.Cnombre)
+                .HasMaxLength(200)
+                .IsUnicode(false)
+                .HasColumnName("CNombre");
         });
 
         modelBuilder.Entity<Pnccausante>(entity =>
@@ -333,9 +352,6 @@ public partial class DbNeoContext : DbContext
             entity.Property(e => e.Pncfecha)
                 .HasColumnType("date")
                 .HasColumnName("PNCFecha");
-            entity.Property(e => e.Pncinconfo)
-                .IsUnicode(false)
-                .HasColumnName("PNCInconfo");
             entity.Property(e => e.PncindLibe)
                 .IsUnicode(false)
                 .HasColumnName("PNCIndLibe");
@@ -347,6 +363,11 @@ public partial class DbNeoContext : DbContext
                 .HasMaxLength(100)
                 .IsUnicode(false)
                 .HasColumnName("PNCOrdFabr");
+
+            entity.HasOne(d => d.IdCausaNavigation).WithMany(p => p.ProNoCons)
+                .HasForeignKey(d => d.IdCausa)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ProNoCon_PNCCausa");
 
             entity.HasOne(d => d.IdCausanteNavigation).WithMany(p => p.ProNoCons)
                 .HasForeignKey(d => d.IdCausante)
@@ -438,6 +459,7 @@ public partial class DbNeoContext : DbContext
                 .IsUnicode(false)
                 .HasColumnName("Lugar Evento");
             entity.Property(e => e.NoConformidad)
+                .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("No Conformidad");
             entity.Property(e => e.OrdenDeFabricacion)

@@ -12,6 +12,9 @@
 @inject IDataProductoNoConforme DataProductoNoConforme
 @inject IDataPNCTipo DataPNCTipo
 @inject IDataLinea DataLinea
+@inject IDataAPI DataAPI
+@inject IDataPNCCausa DataPNCCausa
+
 
 <PageTitle>Dispocisión de Producto No Conforme</PageTitle>
 
@@ -29,7 +32,7 @@
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                             <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
-                                    <RadzenDatePicker Name="FECHA" @bind-Value=registro.Pncfecha DateFormat="MM/dd/yyyy" />
+                                    <RadzenDatePicker Name="FECHA" @bind-Value=registro.Pncfecha DateFormat="dd/MM/yyyy" />
                                 </RadzenFormField>
                                 <RadzenRequiredValidator Component="FECHA" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
@@ -41,25 +44,30 @@
                             </RadzenColumn> 
                             <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="LOTE">
-                                    <RadzenTextBox  @bind-Value=registro.Pnclote class="w-100" />
+                                    <RadzenTextBox Name="LOTE"  @bind-Value=registro.Pnclote class="w-100" />
                                 </RadzenFormField>
+                                <RadzenRequiredValidator Component="LOTE" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
                             <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="ORDEN DE FABRICACIÓN">
-                                    <RadzenTextBox  @bind-Value=registro.PncordFabr class="w-100" />
+                                    <RadzenTextBox Name="ORDENDEFABRICACION" @bind-Value=registro.PncordFabr class="w-100" />
                                 </RadzenFormField>
+                                <RadzenRequiredValidator Component="ORDENDEFABRICACION" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
-                            <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenColumn Size="10" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CÓDIGO ERP">
                                     <RadzenTextBox Name="CODIGOERP" @bind-Value=registro.PnccodProd  class="w-100" />
                                 </RadzenFormField>
                                 <RadzenRequiredValidator Component="CODIGOERP" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
-                            <RadzenColumn Size="12" SizeMD="8" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenColumn Size="2" SizeMD="1" Class="rz-text-align-center rz-text-align-md-center">
+                                <RadzenButton Click=@(args => BuscarDescrpcion()) Image="img/Search.png" ButtonStyle="ButtonStyle.Light" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="7" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="DESCRIPCIÓN ERP">
-                                    <RadzenTextArea Name="DESCRIPCIONERP" @bind-Value=registro.PncdesProd Cols="30" Rows="1"  class="w-100"/>
+                                    <RadzenTextArea Disabled="@disabled" Name="DESCRIPCIONERP" @bind-Value=registro.PncdesProd Cols="30" Rows="1"  class="w-100"/>
                                 </RadzenFormField>
                                 <RadzenRequiredValidator Component="DESCRIPCIONERP" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
@@ -92,10 +100,10 @@
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                             <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
-                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="NO CONFORMIDAD">
-                                    <RadzenTextArea Cols="30" Rows="3" Name="NOCONFORMIDAD"  @bind-Value=registro.Pncinconfo class="w-100"/>
+                                <RadzenFormField Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="NO CONFORMIDAD">
+                                    <RadzenDropDown  AllowClear="true" Name="NOCONFORMIDAD" @bind-Value=registro.IdCausa AllowVirtualization="true" AllowFiltering="true" Data=@listaCausa TextProperty="Cnombre" ValueProperty="IdCausa" Style="width: 100%;" /> 
                                 </RadzenFormField>
-                                <RadzenRequiredValidator Component="NOCONFORMIDAD" Text="Requerido" Popup=@popup Style="position: relative"/>
+                                <RadzenCustomValidator Component="NOCONFORMIDAD" Validator="@(() => registro.IdCausa != 0)" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
@@ -182,6 +190,8 @@
     private List<Pncriesgo>? listaRiesgo {get; set;}
     private List<Pncunidad>? listaUnidad {get; set;}
     private List<Pnctipo>? listaTipo {get; set;}
+    private List<Pnccausa>? listaCausa {get; set;}
+    private bool disabled  {get; set;} = true;
     private string ficha { get; set;} = "";
     private int idEmpresa { get; set; }
     private bool isDisabledButton {get; set;} = false;
@@ -199,7 +209,6 @@
             if (user?.Identity is not null && user.Identity.IsAuthenticated)
             {
                 claims = user.Claims;
-                
                 idEmpresa = int.Parse(user.FindFirst(c => c.Type == "IdEmpresa")?.Value ?? "0") ;
                 ficha = user.FindFirst(c => c.Type == "Ficha")?.Value ?? "" ;
 
@@ -212,6 +221,7 @@
                 listaUnidad = await DataPNCUnidad.ObtenerTodosLasUnidades();
                 listaTipo = await DataPNCTipo.ObtenerTodosLosTipos();
                 listaEventos = await DataLinea.ObtenerTodasLasLineasDeLaEmpresa(idEmpresa);
+                listaCausa = await DataPNCCausa.ObtenerTodasLasCausas();
                 registro.Pnccantida = 1;
             }
         }
@@ -229,6 +239,7 @@
 
         if(isEstado){
             registro = new ProNoCon();
+            registro.Pncfecha = DateTime.Now;
             Notificacion("exito","","Registrado con exito");
         }else{
             Notificacion("error","Error"," Realice nuevamente la carga");
@@ -238,7 +249,17 @@
     }
     protected void Borrar(){
         registro = new ProNoCon();
+        registro.Pncfecha = DateTime.Now;
     }
+    protected async Task BuscarDescrpcion(){
+        registro.PncdesProd = await DataAPI.ObtenerDescripciondeProducto(registro.PnccodProd);
+        if (registro.PncdesProd == ""){
+            Notificacion("error","","No se encontro el codigo");
+        }else{
+            Notificacion("info","","Se encontro el codigo");
+        }
+    }
+
     public void Notificacion(string tipo,string mensaje,string detalle)
     {
 

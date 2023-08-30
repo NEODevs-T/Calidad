@@ -12,14 +12,13 @@ using Blazored.LocalStorage;
 using Global.DTOs;
 using Global.Service;
 using Global.Data;
+using Global.Data.API;
 
 using Calidad.Model;
 using Calidad.ProductoNoConforme;
 
-
-
-
 using Radzen;
+
 
 // using Calidad.Data;
 
@@ -57,6 +56,8 @@ builder.Services.AddDbContext<DbNeoContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionDbNeo")),ServiceLifetime.Transient
 );
 
+builder.Services.AddScoped<IDataAPI,DataAPI>();
+
 builder.Services.AddScoped<IDataPais,DataPais>();
 builder.Services.AddScoped<IDataEmpresa,DataEmpresa>();
 builder.Services.AddScoped<IDataCentro, DataCentro>();
@@ -71,6 +72,7 @@ builder.Services.AddScoped<IDataPNCRiesgo,DataPNCRiesgo>();
 builder.Services.AddScoped<IDataPNCUnidad,DataPNCUnidad>();
 builder.Services.AddScoped<IDataProductoNoConforme,DataProductoNoConforme>();
 builder.Services.AddScoped<IDataPNCTipo,DataPNCTipo>();
+builder.Services.AddScoped<IDataPNCCausa,DataPNCCausa>();
 
 var app = builder.Build();
 

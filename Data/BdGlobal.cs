@@ -112,7 +112,6 @@ namespace Global.Data
             return await _cotext.Lineas.Where(l => l.IdDivisionNavigation.IdCentroNavigation.IdEmpresa == IdEmpresa).OrderBy(l => l.Lnom).ToListAsync();
         }
 
-
         public async Task<List<Linea>> ObtenerLasLineasPorDivision(int idDivision){
             return await _cotext.Lineas.Where(l => l.IdDivision == idDivision).ToListAsync();
         }

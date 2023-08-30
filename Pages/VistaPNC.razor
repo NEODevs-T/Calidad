@@ -14,13 +14,13 @@
             <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
                 <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                     <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
-                        <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
-                            <RadzenDatePicker Name="fechaEmicionInicio" @bind-Value=fechaEmicionInicio  DateFormat="MM/dd/yyyy" />
+                        <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA INICIO">
+                            <RadzenDatePicker Name="fechaEmicionInicio" @bind-Value=fechaEmicionInicio  DateFormat="dd/MM/yyyy" />
                         </RadzenFormField>
                     </RadzenColumn>
                     <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
-                        <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
-                            <RadzenDatePicker Name="fechaEmicionFinal" @bind-Value=fechaEmicionFinal  DateFormat="MM/dd/yyyy" />
+                        <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA FINAL">
+                            <RadzenDatePicker Name="fechaEmicionFinal" @bind-Value=fechaEmicionFinal  DateFormat="dd/MM/yyyy" />
                         </RadzenFormField>
                     </RadzenColumn>
                     <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
@@ -31,7 +31,7 @@
         </RadzenFieldset>
 
         <div class="table mt-5">
-            <RadzenDataGrid @ref="ordersProductoNoConforme" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true" 
+            <RadzenDataGrid @ref="ordersProductoNoConforme" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="10" AllowSorting="true" 
                         Data="@listaProductoNoConforme" TItem="ProductoNoConforme" >
                 <Columns>
                     <RadzenDataGridColumn Width="5%" TItem="ProductoNoConforme" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
@@ -41,7 +41,7 @@
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn Width="9%" TItem="ProductoNoConforme" Property="Fecha" Title="Fecha">
                         <Template Context="order">
-                            <RadzenText class="mb-0 tipografia">@order.Fecha.ToString("MM/dd/yyyy")</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@order.Fecha.ToString("dd/MM/yyyy")</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn  TItem="ProductoNoConforme" Property="CodigoDeProducto" Title="Codigo del Producto">

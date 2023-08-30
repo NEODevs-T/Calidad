@@ -11,6 +11,7 @@
 @inject IDataProductoNoConforme DataProductoNoConforme
 @inject IDataPNCTipo DataPNCTipo
 @inject IDataLinea DataLinea
+@inject IDataPNCCausa DataPNCCausa
 @inject IJSRuntime JS
 
 <PageTitle>Dispocisión de Producto No Conforme</PageTitle>
@@ -92,7 +93,8 @@
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                             <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="NO CONFORMIDAD">
-                                    <RadzenTextArea  Disabled="@IsDisable" Cols="30" Rows="3" Name="NOCONFORMIDAD"  @bind-Value=registro.Pncinconfo class="w-100"/>
+                                    @* TODO: Falta poner lista de causa *@
+                                    <RadzenDropDown  Disabled="@IsDisable" AllowClear="true" Name="NOCONFORMIDAD" @bind-Value=registro.IdCausa AllowVirtualization="true" AllowFiltering="true" Data=@listaCausa TextProperty="Cnombre" ValueProperty="IdCausa" Style="width: 100%;" /> 
                                 </RadzenFormField>
                                 <RadzenRequiredValidator Component="NOCONFORMIDAD" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
@@ -184,6 +186,7 @@
     private List<Pncriesgo>? listaRiesgo {get; set;}
     private List<Pncunidad>? listaUnidad {get; set;}
     private List<Pnctipo>? listaTipo {get; set;}
+    private List<Pnccausa>? listaCausa {get; set;}
     private string ficha { get; set;} = "";
     private int idEmpresa { get; set; }
     private bool isDisabledButton {get; set;} = false;
@@ -217,6 +220,7 @@
                 listaUnidad = await DataPNCUnidad.ObtenerTodosLasUnidades();
                 listaTipo = await DataPNCTipo.ObtenerTodosLosTipos();
                 listaEventos = await DataLinea.ObtenerTodasLasLineasDeLaEmpresa(idEmpresa); 
+                listaCausa = await DataPNCCausa.ObtenerTodasLasCausas();
             }
         }
         isCargado = true;

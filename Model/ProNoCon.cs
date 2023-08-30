@@ -13,8 +13,6 @@ public partial class ProNoCon
 
     public string? Pnclote { get; set; }
 
-    public string Pncinconfo { get; set; } = null!;
-
     public int Pnccantida { get; set; }
 
     public string PnccauLibe { get; set; } = null!;
@@ -42,6 +40,10 @@ public partial class ProNoCon
     public DateTime Pncfecha { get; set; }
 
     public string? PncordFabr { get; set; }
+
+    public int IdCausa { get; set; }
+
+    public virtual Pnccausa IdCausaNavigation { get; set; } = null!;
 
     public virtual Pnccausante IdCausanteNavigation { get; set; } = null!;
 

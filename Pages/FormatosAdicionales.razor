@@ -4,6 +4,7 @@
 
 @inject IDataPNCRiesgo DataPNCRiesgo
 @inject IDataPNCPropuestaDisposicion DataPNCPropuestaDisposicion
+@inject IDataPNCCausa DataPNCCausa
 
 <PageTitle>Formatos Adicionales</PageTitle>
 
@@ -64,6 +65,33 @@
                 </RadzenStack>
             </RadzenFieldset>
         </RadzenTemplateForm>
+
+        <RadzenTemplateForm TItem="Pnccausa" Data=@causa Submit=@OKCausa>
+            <RadzenFieldset Text="Formatos de No Conformidades">
+                <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
+                    <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                        <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Causa">
+                                <RadzenTextBox Name="causa" @bind-Value=causa.Cnombre  class="w-100" />
+                            </RadzenFormField>
+                            <RadzenRequiredValidator Component="causa" Text="Requerido" Popup=@popup Style="position: relative"/>
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="7" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Descripcion">
+                                <RadzenTextBox  @bind-Value=causa.Cdescri  class="w-100" />
+                            </RadzenFormField>
+                        </RadzenColumn>
+                    </RadzenRow>
+                    <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                        <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
+                            <RadzenButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Disabled="@isDisabledButton" Text="Registrar" ButtonStyle="ButtonStyle.Success" />
+                            <RadzenButton ButtonType="ButtonType.Reset" Variant="Variant.Outlined" Disabled="@isDisabledButton" Click=BorrarCausa Text="Borrar" ButtonStyle="ButtonStyle.Danger" />
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenStack>
+            </RadzenFieldset>
+        </RadzenTemplateForm>
+
     </Authorized>
     <NotAuthorized>
         <RadzenText TextStyle="TextStyle.DisplayH5" class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">
@@ -75,8 +103,8 @@
 
 @code{
     private Pncriesgo riesgo {get; set;} = new Pncriesgo();
-
     private PncproDisp alternativaDisposicion {get; set;} = new PncproDisp();
+    private Pnccausa causa {get; set;} = new Pnccausa();
     private bool popup {get; set;} = false; 
     private bool isDisabledButton {get; set;} = false;
     private bool allOk {get; set;} 
@@ -118,12 +146,34 @@
         isDisabledButton = false;
     }
 
+    protected async Task OKCausa(){
+        isDisabledButton = true;
+
+        Notificacion("info","","Cagando...");
+        
+        causa.Cestado = true;
+        allOk = await DataPNCCausa.InsertarCausa(causa);
+
+        if(allOk){
+            causa = new Pnccausa();
+            Notificacion("exito","","Registrado con exito");
+        }else{
+            Notificacion("error","Error"," Realice nuevamente la carga");
+        }
+
+        isDisabledButton = false;
+    }
+
     protected void BorrarRiesgo(){
         riesgo = new Pncriesgo();
     }
 
     protected void BorrarAlternativaDisposicion(){
         alternativaDisposicion = new PncproDisp();
+    }
+
+    protected void BorrarCausa(){
+        causa = new Pnccausa();
     }
 
     public void Notificacion(string tipo,string mensaje,string detalle)
