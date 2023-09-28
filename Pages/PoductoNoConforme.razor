@@ -81,9 +81,8 @@
                             </RadzenColumn>
                             <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="RESPONSABLE / CAUSANTE">
-                                    <RadzenDropDown Name="CAUSANTE" AllowClear="true" @bind-Value=registro.IdCausante TextProperty="Cnombre" ValueProperty="IdCausante" AllowVirtualization="true" AllowFiltering="true" Data=@listaCausante  Style="width: 100%;" /> 
+                                    <RadzenDropDown Name="CAUSANTE" AllowClear="true" Change=@BuscarCausa @bind-Value=idCausante TextProperty="Cnombre" ValueProperty="IdCausante" AllowVirtualization="true" AllowFiltering="true" Data=@listaCausante  Style="width: 100%;" /> 
                                 </RadzenFormField>
-                                <RadzenCustomValidator Component="CAUSANTE" Validator="@(() => registro.IdCausante != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
                             </RadzenColumn>
                             <RadzenColumn Size="6" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CANTIDAD">
@@ -194,6 +193,7 @@
     private bool disabled  {get; set;} = true;
     private string ficha { get; set;} = "";
     private int idEmpresa { get; set; }
+    private int idCausante { get; set; }
     private bool isDisabledButton {get; set;} = false;
     private bool popup {get; set;} = false;
     private bool isEstado {get; set;} 
@@ -221,7 +221,6 @@
                 listaUnidad = await DataPNCUnidad.ObtenerTodosLasUnidades();
                 listaTipo = await DataPNCTipo.ObtenerTodosLosTipos();
                 listaEventos = await DataLinea.ObtenerTodasLasLineasDeLaEmpresa(idEmpresa);
-                listaCausa = await DataPNCCausa.ObtenerTodasLasCausas();
                 registro.Pnccantida = 1;
             }
         }
@@ -246,6 +245,10 @@
         }
 
         isDisabledButton = false;
+    }
+
+    protected async Task BuscarCausa(){
+        listaCausa = await DataPNCCausa.ObtenerLasCausasPorCausante(idCausante);
     }
     protected void Borrar(){
         registro = new ProNoCon();

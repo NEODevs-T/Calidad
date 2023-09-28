@@ -73,9 +73,8 @@
                             </RadzenColumn>
                             <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="RESPONSABLE / CAUSANTE">
-                                    <RadzenDropDown  Disabled="@IsDisable" Name="CAUSANTE" AllowClear="true" @bind-Value=registro.IdCausante TextProperty="Cnombre" ValueProperty="IdCausante" AllowVirtualization="true" AllowFiltering="true" Data=@listaCausante  Style="width: 100%;" /> 
+                                    <RadzenDropDown  Disabled="@IsDisable" Name="CAUSANTE" AllowClear="true" @bind-Value=registro.IdCausaNavigation.IdCausante TextProperty="Cnombre" ValueProperty="IdCausante" AllowVirtualization="true" AllowFiltering="true" Data=@listaCausante  Style="width: 100%;" /> 
                                 </RadzenFormField>
-                                <RadzenCustomValidator Component="CAUSANTE" Validator="@(() => registro.IdCausante != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
                             </RadzenColumn>
                             <RadzenColumn Size="6" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="CANTIDAD">
@@ -189,11 +188,13 @@
     private List<Pnccausa>? listaCausa {get; set;}
     private string ficha { get; set;} = "";
     private int idEmpresa { get; set; }
+    private int IdCausante { get; set; }
     private bool isDisabledButton {get; set;} = false;
     private bool popup {get; set;} = false;
     private bool isEstado {get; set;} 
     private bool isCargado {get; set;} 
     private bool IsDisable {get; set;} = true;
+
     private List<Linea>? listaEventos {get; set;}
 
     protected override async Task OnInitializedAsync()
@@ -226,12 +227,14 @@
         isCargado = true;
     }
 
-    
+    protected async Task BuscarCausa(){
+        
+    }
     protected async Task Atras(){
         NavigationManager.NavigateTo("HistorialPNC/");
     }
     protected async Task Imprimir(){
-        NavigationManager.NavigateTo($"/impresion/{id}");
+        NavigationManager.NavigateTo($"impresion/{id}");
     }
     public void Notificacion(string tipo,string mensaje,string detalle)
     {

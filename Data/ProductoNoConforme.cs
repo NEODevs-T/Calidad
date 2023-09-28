@@ -195,7 +195,6 @@ namespace Calidad.ProductoNoConforme
         public async Task<bool> ActualizarProductoNoConforme(int idProNoCon, ProNoCon registro){
             ProNoCon? data = await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idProNoCon).FirstOrDefaultAsync();
             if(data != null){
-                data.IdCausante = registro.IdCausante;
                 data.IdDisDefi = registro.IdDisDefi;
                 data.IdEstado = registro.IdEstado;
                 data.IdIdentif = registro.IdIdentif;
@@ -236,10 +235,10 @@ namespace Calidad.ProductoNoConforme
         }
 
         public async Task<ProNoCon?> ObtenerProductoNoConforme(int idRegistro){
-            return await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idRegistro).FirstOrDefaultAsync();
+            return await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idRegistro).Include(p => p.IdCausaNavigation).ThenInclude(c => c.IdCausanteNavigation).FirstOrDefaultAsync();
         }
         public async Task<ProNoCon?> ObtenerProductoNoConformeConTodaLaData(int idRegistro){
-            var reg = await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idRegistro).Include(p => p.IdCausanteNavigation).Include(p => p.IdDisDefiNavigation).Include(p => p.IdEstadoNavigation).Include(p => p.IdIdentifNavigation).Include(p => p.IdLugaEvenNavigation).Include(p => p.IdProDispNavigation).Include(p => p.IdTipoNavigation).Include(p => p.IdUnidadNavigation).Include(p => p.IdCausaNavigation).FirstOrDefaultAsync();
+            var reg = await this._cotext.ProNoCons.Where(p => p.IdProNoCon == idRegistro).Include(p => p.IdDisDefiNavigation).Include(p => p.IdEstadoNavigation).Include(p => p.IdIdentifNavigation).Include(p => p.IdLugaEvenNavigation).Include(p => p.IdProDispNavigation).Include(p => p.IdTipoNavigation).Include(p => p.IdUnidadNavigation).Include(p => p.IdCausaNavigation).ThenInclude(c => c.IdCausanteNavigation).FirstOrDefaultAsync();
             return reg;
         }
     }
@@ -247,6 +246,7 @@ namespace Calidad.ProductoNoConforme
     public interface IDataPNCCausa
     {
         Task<List<Pnccausa>> ObtenerTodasLasCausas();
+        Task<List<Pnccausa>> ObtenerLasCausasPorCausante(int idCausante);
 
         Task<bool> InsertarCausa(Pnccausa registro);
     }
@@ -264,6 +264,11 @@ namespace Calidad.ProductoNoConforme
         public async Task<List<Pnccausa>> ObtenerTodasLasCausas()
         {
             return await this._cotext.Pnccausas.Where(p => p.Cestado == true).ToListAsync();
+        }
+
+        public async Task<List<Pnccausa>> ObtenerLasCausasPorCausante(int idCausante)
+        {
+            return await this._cotext.Pnccausas.Where(p => p.Cestado == true && p.IdCausante == idCausante).ToListAsync();
         }
 
         public async Task<bool> InsertarCausa(Pnccausa registro){

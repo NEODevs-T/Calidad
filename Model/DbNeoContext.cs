@@ -48,8 +48,7 @@ public partial class DbNeoContext : DbContext
     public virtual DbSet<ProductoNoConforme> ProductoNoConformes { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseSqlServer("Data Source=10.20.1.60\\DESARROLLO;Initial Catalog=DbNeo;TrustServerCertificate=True;Persist Security Info=True;User ID=UsrEncuesta;Password=Enc2022**Ing");
+    => optionsBuilder.UseSqlServer("Data Source=10.20.1.60\\DESARROLLO;Initial Catalog=DbNeo;TrustServerCertificate=True;Persist Security Info=True;User ID=UsrEncuesta;Password=Enc2022**Ing");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -188,6 +187,11 @@ public partial class DbNeoContext : DbContext
                 .HasMaxLength(200)
                 .IsUnicode(false)
                 .HasColumnName("CNombre");
+
+            entity.HasOne(d => d.IdCausanteNavigation).WithMany(p => p.Pnccausas)
+                .HasForeignKey(d => d.IdCausante)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PNCCausa_PNCCausante");
         });
 
         modelBuilder.Entity<Pnccausante>(entity =>
@@ -368,11 +372,6 @@ public partial class DbNeoContext : DbContext
                 .HasForeignKey(d => d.IdCausa)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ProNoCon_PNCCausa");
-
-            entity.HasOne(d => d.IdCausanteNavigation).WithMany(p => p.ProNoCons)
-                .HasForeignKey(d => d.IdCausante)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_ProNoCon_PNCCausante");
 
             entity.HasOne(d => d.IdDisDefiNavigation).WithMany(p => p.ProNoCons)
                 .HasForeignKey(d => d.IdDisDefi)

@@ -13,5 +13,5 @@ public partial class Pnccausante
 
     public bool Cestado { get; set; }
 
-    public virtual ICollection<ProNoCon> ProNoCons { get; set; } = new List<ProNoCon>();
+    public virtual ICollection<Pnccausa> Pnccausas { get; set; } = new List<Pnccausa>();
 }

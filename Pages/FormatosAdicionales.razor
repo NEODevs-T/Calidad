@@ -5,6 +5,7 @@
 @inject IDataPNCRiesgo DataPNCRiesgo
 @inject IDataPNCPropuestaDisposicion DataPNCPropuestaDisposicion
 @inject IDataPNCCausa DataPNCCausa
+@inject IDataPNCCausante DataPNCCausante
 
 <PageTitle>Formatos Adicionales</PageTitle>
 
@@ -14,31 +15,7 @@
             Formatos 
         </RadzenText>
 
-        <RadzenTemplateForm TItem="Pncriesgo" Data=@riesgo Submit=@OKRiesgo>
-            <RadzenFieldset Text="Formatos de Riesgo">
-                <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
-                    <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
-                        <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
-                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Riesgo">
-                                <RadzenTextBox Name="nombreRiesgo" @bind-Value=riesgo.Rnombre  class="w-100" />
-                            </RadzenFormField>
-                            <RadzenRequiredValidator Component="nombreRiesgo" Text="Requerido" Popup=@popup Style="position: relative"/>
-                        </RadzenColumn>
-                        <RadzenColumn Size="12" SizeMD="7" Class="rz-text-align-start rz-text-align-md-start">
-                            <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Descripcion">
-                                <RadzenTextBox  @bind-Value=riesgo.Rdescri  class="w-100" />
-                            </RadzenFormField>
-                        </RadzenColumn>
-                    </RadzenRow>
-                    <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
-                        <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
-                            <RadzenButton ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Disabled="@isDisabledButton" Text="Registrar" ButtonStyle="ButtonStyle.Success" />
-                            <RadzenButton ButtonType="ButtonType.Reset" Variant="Variant.Outlined" Disabled="@isDisabledButton" Click=BorrarRiesgo Text="Borrar" ButtonStyle="ButtonStyle.Danger" />
-                        </RadzenColumn>
-                    </RadzenRow>
-                </RadzenStack>
-            </RadzenFieldset>
-        </RadzenTemplateForm>
+        
 
         <RadzenTemplateForm TItem="PncproDisp" Data=@alternativaDisposicion Submit=@OKAlternativaDisposicion>
             <RadzenFieldset Text="Formatos de Alternativa Propuesta de Disposición">
@@ -69,6 +46,14 @@
         <RadzenTemplateForm TItem="Pnccausa" Data=@causa Submit=@OKCausa>
             <RadzenFieldset Text="Formatos de No Conformidades">
                 <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
+                    <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
+                            <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
+                                <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="RESPONSABLE / CAUSANTE">
+                                    <RadzenDropDown Name="CAUSANTE" AllowClear="true" @bind-Value=idCausante TextProperty="Cnombre" ValueProperty="IdCausante" AllowVirtualization="true" AllowFiltering="true" Data=@listaCausante  Style="width: 100%;" /> 
+                                </RadzenFormField>
+                                <RadzenRequiredValidator Component="CAUSANTE" Text="Requerido" Popup=@popup Style="position: relative"/>
+                            </RadzenColumn>
+                    </RadzenRow>
                     <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                         <RadzenColumn Size="12" SizeMD="5" Class="rz-text-align-start rz-text-align-md-start">
                             <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="Causa">
@@ -102,30 +87,32 @@
 
 
 @code{
-    private Pncriesgo riesgo {get; set;} = new Pncriesgo();
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+    private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
     private PncproDisp alternativaDisposicion {get; set;} = new PncproDisp();
     private Pnccausa causa {get; set;} = new Pnccausa();
+    private List<Pnccausante> listaCausante {get; set;}
     private bool popup {get; set;} = false; 
     private bool isDisabledButton {get; set;} = false;
     private bool allOk {get; set;} 
+    private int idCausante {get; set;}  = 1;
+    private bool isCargado {get; set;}
 
-
-    protected async Task OKRiesgo(){
-        isDisabledButton = true;
-
-        Notificacion("info","","Cagando...");
-
-        riesgo.Restado = true;
-        allOk = await DataPNCRiesgo.RegistrarRiesgo(riesgo);
-
-        if(allOk){
-            riesgo = new Pncriesgo();
-            Notificacion("exito","","Registrado con exito");
-        }else{
-            Notificacion("error","Error"," Realice nuevamente la carga");
+    protected override async Task OnInitializedAsync()
+    {
+        isCargado = false;
+        if (authenticationState is not null)
+        {
+            AuthenticationState? authState = await authenticationState;
+            ClaimsPrincipal? user = authState?.User;
+            if (user?.Identity is not null && user.Identity.IsAuthenticated)
+            {
+                listaCausante = await DataPNCCausante.ObtenerTodosLosCausantes();
+                idCausante = 1;
+            }
         }
-
-        isDisabledButton = false;
+        isCargado = false;
     }
 
     protected async Task OKAlternativaDisposicion(){
@@ -152,6 +139,7 @@
         Notificacion("info","","Cagando...");
         
         causa.Cestado = true;
+        causa.IdCausante = idCausante;
         allOk = await DataPNCCausa.InsertarCausa(causa);
 
         if(allOk){
@@ -162,10 +150,6 @@
         }
 
         isDisabledButton = false;
-    }
-
-    protected void BorrarRiesgo(){
-        riesgo = new Pncriesgo();
     }
 
     protected void BorrarAlternativaDisposicion(){

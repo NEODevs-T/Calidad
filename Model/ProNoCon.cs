@@ -27,8 +27,6 @@ public partial class ProNoCon
 
     public int IdEstado { get; set; }
 
-    public int IdCausante { get; set; }
-
     public int IdUnidad { get; set; }
 
     public int? IdIdentif { get; set; }
@@ -44,8 +42,6 @@ public partial class ProNoCon
     public int IdCausa { get; set; }
 
     public virtual Pnccausa IdCausaNavigation { get; set; } = null!;
-
-    public virtual Pnccausante IdCausanteNavigation { get; set; } = null!;
 
     public virtual PncdisDefi IdDisDefiNavigation { get; set; } = null!;
 
