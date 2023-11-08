@@ -34,7 +34,7 @@
         <NotAuthorized>
             <main>
                 <div class="text-center fondo">
-                    <div class="form-signin w-25 m-auto loginform ">
+                    <RadzenTemplateForm Context="radzen" Data="@userDto" class="form-signin w-25 m-auto loginform ">
 
                         <img class="mb-4" id="logoLogin" src="./img/Neo.png">
                         <h1 class="h3 mb-3 fw-normal">Inicie Sesión</h1>
@@ -45,12 +45,11 @@
                         <RadzenText TextStyle="TextStyle.Subtitle1" class="pt-4" TagName="TagName.H3">Contraseña</RadzenText>
                         <RadzenPassword @bind-Value=@contrasena Placeholder="Contraseña..."  class="w-100"/>
 
-                        <RadzenButton class="mt-4" ButtonType="ButtonType.Button" Variant="Variant.Outlined" Disabled="@isDisabled" Text="Registrar" ButtonStyle="ButtonStyle.Success" Click=login/>
-                    </div>
+                        <RadzenButton class="mt-4" ButtonType="ButtonType.Submit" Variant="Variant.Outlined" Disabled="@isDisabled" Text="Registrar" ButtonStyle="ButtonStyle.Success" Click=login/>
+                    </RadzenTemplateForm>
                 </div>              
             </main>
         </NotAuthorized>
-
     </AuthorizeView> 
     <RadzenNotification/>
 </div>
