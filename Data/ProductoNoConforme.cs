@@ -1,28 +1,59 @@
 using Calidad.Model;
 using Microsoft.EntityFrameworkCore;
+using Calidad.DTOs.PNC;
 
 namespace Calidad.ProductoNoConforme
 {
     public interface IDataPNCIdentificacion
     {
-        Task<List<Pncidentif>> ObtenerTodosLasIdentificaciones();
+        Task<List<IdentifDTO>> GetTodosLosIdentifi();
     }
 
     public class DataPNCIdentificacion : IDataPNCIdentificacion
     {
+        private readonly IHttpClientFactory _clientFactory;
+        private const string BaseUrl = "http://neo.paveca.com.ve/apineomaster/api/PNCIdentificacion";
 
-        private readonly DbNeoContext _cotext;
+        private HttpClient cliente { get; set; } = new HttpClient();
 
-        public DataPNCIdentificacion(DbNeoContext context)
+        private HttpResponseMessage? mensaje { get; set; } = new HttpResponseMessage();
+        private string url {get; set;} = " ";
+
+
+        public DataPNCIdentificacion (IHttpClientFactory clientFactory)
+
         {
-            this._cotext = context;
+            _clientFactory = clientFactory;
         }
 
-        public async Task<List<Pncidentif>> ObtenerTodosLasIdentificaciones()
+        public async Task<List<IdentifDTO>> GetTodosLosIdentifi()
         {
-            return await this._cotext.Pncidentifs.Where(i => i.Iestado == true).ToListAsync();
+            bool band;
+            url = $"{BaseUrl}/PNCIdentificacion/";
+            cliente = _clientFactory.CreateClient();
+            band = await cliente.GetFromJsonAsync<bool>(url);
+            return band;
         }
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public interface IDataPNCTipo
     {
