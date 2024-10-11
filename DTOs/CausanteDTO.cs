@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NeoAPI.DTOs.PNC;
+namespace Calidad.DTOs.PNC;
 public class CausanteDTO
 {
     public int IdCausante { get; set; }

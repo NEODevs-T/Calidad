@@ -22,7 +22,7 @@
 
 
 <AuthorizeView Roles="SuperAdmin,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad,SuperUser" Context="autorized">
-   <Authorized>
+    <Authorized>
     @if(registro.IdTipoNavigation != null){
                         <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 800px">
                         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
@@ -98,8 +98,10 @@
     
     [Parameter]
     public int id { get; set; }
+    public int IdRegistro { get; set; }
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
     private ProNoCon registro {get; set;}  = new ProNoCon();
+    public List<ProNoConDTO>? registroNuevo { get; set; } = new List<ProNoConDTO>();
     private List<Pnccausante>? listaCausante {get; set;} 
     private List<PncdisDefi>? listaDisposicionDefinitiva {get; set;} 
     private List<Pncidentif>? listaIdentificacion {get; set;} 
@@ -132,7 +134,7 @@
                 ficha = user.FindFirst(c => c.Type == "Ficha")?.Value ?? "" ;
 
                 
-                registro = await DataProductoNoConforme.ObtenerProductoNoConformeConTodaLaData(id);
+                registroNuevo = await DataProductoNoConforme.GetProductoNoConformeConTodaLaData(id);
                 @* listaCausante = await DataPNCCausante.ObtenerTodosLosCausantes();
                 listaDisposicionDefinitiva = await DataPNCDisposicionDefinitiva.ObtenerTodosLasDisposicionDefinitiva();
                 listaIdentificacion = await DataPNCIdentificacion.ObtenerTodosLasIdentificaciones();

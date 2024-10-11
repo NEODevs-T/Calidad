@@ -101,10 +101,12 @@
     private DateTime fechaEmicionFinal {get; set;} = DateTime.Now;
     public RadzenDataGrid<ProductoNoConforme> ordersProductoNoConforme {get; set;} = new RadzenDataGrid<ProductoNoConforme>();
     public IList<ProductoNoConforme> listaProductoNoConforme {get; set;} = new List<ProductoNoConforme>();
+    public List<ProNoConDTO>? registroNuevo { get; set; } = new List<ProNoConDTO>();
     private bool isDisabledButton {get; set;} = false;
 
-    protected async Task Buscar(){
-        listaProductoNoConforme = await DataProductoNoConforme.ObtenerProductoNoConformePorFiltro(fechaEmicionInicio,fechaEmicionFinal);
+    protected async Task Buscar()
+    {
+        registroNuevo = await DataProductoNoConforme.GetProductoNoConformePorFiltro(fechaEmicionInicio,fechaEmicionFinal);
     }
     protected async Task Detalles(int IdRegistro){
         NavigationManager.NavigateTo($"detalles/{IdRegistro}");

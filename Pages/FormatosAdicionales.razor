@@ -91,8 +91,10 @@
     private Task<AuthenticationState>? authenticationState { get; set; }
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
     private PncproDisp alternativaDisposicion {get; set;} = new PncproDisp();
+    private ProDispDTO registro {get; set;}
     private Pnccausa causa {get; set;} = new Pnccausa();
-    private List<Pnccausante> listaCausante {get; set;}
+    private causaDTO causaNuevo {get; set;}
+    private List<CausanteDTO> listaCausante {get; set;}
     private bool popup {get; set;} = false; 
     private bool isDisabledButton {get; set;} = false;
     private bool allOk {get; set;} 
@@ -108,7 +110,7 @@
             ClaimsPrincipal? user = authState?.User;
             if (user?.Identity is not null && user.Identity.IsAuthenticated)
             {
-                listaCausante = await DataPNCCausante.ObtenerTodosLosCausantes();
+                listaCausante = await DataPNCCausante.GetTodosLosCausantes();
                 idCausante = 1;
             }
         }
@@ -121,7 +123,7 @@
         Notificacion("info","","Cagando...");
         
         alternativaDisposicion.Pdestado = true;
-        allOk = await DataPNCPropuestaDisposicion.InsertarPropuestaDisposicion(alternativaDisposicion);
+        allOk = await DataPNCPropuestaDisposicion.AddPropuestaDisposicion(registro);
 
         if(allOk){
             alternativaDisposicion = new PncproDisp();
@@ -140,7 +142,7 @@
         
         causa.Cestado = true;
         causa.IdCausante = idCausante;
-        allOk = await DataPNCCausa.InsertarCausa(causa);
+        allOk = await DataPNCCausa.AddCausa(causaNuevo);
 
         if(allOk){
             causa = new Pnccausa();
