@@ -1,6 +1,7 @@
 using Calidad.Model;
 using Microsoft.EntityFrameworkCore;
 using Calidad.DTOs.PNC;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Calidad.ProductoNoConforme
 {
@@ -117,7 +118,7 @@ namespace Calidad.ProductoNoConforme
     {
 
         private readonly IHttpClientFactory _clientFactory;
-        private const string BaseUrl = "http://neo.paveca.com.ve/apineomaster/api/PNCTipo";
+        private const string BaseUrl = "http://neo.paveca.com.ve/apineomaster/api/PNCCausante";
 
         private HttpClient cliente { get; set; } = new HttpClient();
 
@@ -149,21 +150,17 @@ namespace Calidad.ProductoNoConforme
     public interface IDataPNCPropuestaDisposicion
     {
         Task<List<ProDispDTO>> GetTodasLasPropuestaDisposicion();
-
         Task<bool> AddPropuestaDisposicion(ProDispDTO registro);
     }
 
     public class DataPNCPropuestaDisposicion : IDataPNCPropuestaDisposicion
-    {
-
+{
         private readonly IHttpClientFactory _clientFactory;
         private const string BaseUrl = "http://neo.paveca.com.ve/apineomaster/api/PNCPropuestaDisposicion";
 
         private HttpClient cliente { get; set; } = new HttpClient();
-
         private HttpResponseMessage? mensaje { get; set; } = new HttpResponseMessage();
-        private string url {get; set;} = " ";
-
+        private string url { get; set; } = " ";
 
         public DataPNCPropuestaDisposicion(IHttpClientFactory clientFactory)
         {
@@ -179,47 +176,78 @@ namespace Calidad.ProductoNoConforme
             return data;
         }
 
-
-
         public async Task<bool> AddPropuestaDisposicion(ProDispDTO registro)
         {
-            bool band;
             url = $"{BaseUrl}/AddPropuestaDisposicion/{registro}";
             cliente = _clientFactory.CreateClient();
-            band = await cliente.GetFromJsonAsync<bool>(url);
-            return band;
-
+            
+            var response = await cliente.PostAsJsonAsync(url, registro);
+            response.EnsureSuccessStatusCode();
+            
+            return await response.Content.ReadFromJsonAsync<bool>();
         }
+        
     }
 
 
-    public interface IDataPNCRiesgo
-    {
-        Task<List<Pncriesgo>> ObtenerTodosLosRiesgos();
+    // public async Task<bool> AddPropuestaDisposicion(ProDispDTO registro)
+    // {
+    //     try
+    //     {
+    //         url = $"{BaseUrl}/AddPropuestaDisposicion/{registro}";
+    //         cliente = _clientFactory.CreateClient();
+            
+    //         var response = await cliente.PostAsJsonAsync(url, registro);
+    //         response.EnsureSuccessStatusCode();
+            
+    //         return await response.Content.ReadFromJsonAsync<bool>();
+    //     }
+    //     catch (HttpRequestException httpEx)
+    //     {
+        
+    //         Console.WriteLine($"error1: {httpEx.Message}");
+    //         return false;
+    //     }
+    //     catch (Exception ex)
+    //     {
+        
+    //         Console.WriteLine($"error2: {ex.Message}");
+    //         return false;
+    //     }
+    // }
 
-        Task<bool> RegistrarRiesgo(Pncriesgo registro);
-    }
 
 
-    public class DataPNCRiesgo : IDataPNCRiesgo
-    {
 
-        private readonly DbNeoContext _cotext;
 
-        public DataPNCRiesgo(DbNeoContext context)
-        {
-            this._cotext = context;
-        }
-        public async Task<List<Pncriesgo>> ObtenerTodosLosRiesgos()
-        {
-            return await this._cotext.Pncriesgos.Where(r => r.Restado == true).ToListAsync();
-        }
-        public async Task<bool> RegistrarRiesgo(Pncriesgo registro){
-            this._cotext.Pncriesgos.Add(registro);
 
-            return await _cotext.SaveChangesAsync() > 0;
-        }
-    }
+    // public interface IDataPNCRiesgo
+    // {
+    //     Task<List<Pncriesgo>> ObtenerTodosLosRiesgos();
+
+    //     Task<bool> RegistrarRiesgo(Pncriesgo registro);
+    // }
+
+
+    // public class DataPNCRiesgo : IDataPNCRiesgo
+    // {
+
+    //     private readonly DbNeoContext _cotext;
+
+    //     public DataPNCRiesgo(DbNeoContext context)
+    //     {
+    //         this._cotext = context;
+    //     }
+    //     public async Task<List<Pncriesgo>> ObtenerTodosLosRiesgos()
+    //     {
+    //         return await this._cotext.Pncriesgos.Where(r => r.Restado == true).ToListAsync();
+    //     }
+    //     public async Task<bool> RegistrarRiesgo(Pncriesgo registro){
+    //         this._cotext.Pncriesgos.Add(registro);
+
+    //         return await _cotext.SaveChangesAsync() > 0;
+    //     }
+    // }
 
 
 
@@ -233,7 +261,7 @@ namespace Calidad.ProductoNoConforme
     {
 
         private readonly IHttpClientFactory _clientFactory;
-        private const string BaseUrl = "http://neo.paveca.com.ve/apineomaster/api/PNCUnidad";
+        private const string BaseUrl = "http://neo.paveca.com.ve/apineomaster/api/PNCCaUnidad";
 
         private HttpClient cliente { get; set; } = new HttpClient();
 
@@ -261,7 +289,7 @@ namespace Calidad.ProductoNoConforme
     {
         Task<bool> AddProductoNoConforme(ProNoConDTO registro);
         Task<bool> ActualizarProductoNoConforme(int idProNoCon, ProNoConDTO registro);
-        Task<List<ProNoConDTO>> GetProductoNoConforme(int idRegistro);
+        Task <ProNoConDTO> GetProductoNoConforme(int idRegistro);
         Task<List<ProNoConDTO>> GetProductoNoConformeConTodaLaData(int idRegistro);
         Task<List<Calidad.DTOs.PNC.ProNoConDTO>> GetProductoNoConformePorFecha(DateTime Fecha);
 
@@ -315,7 +343,7 @@ namespace Calidad.ProductoNoConforme
         {
 
             var client = _clientFactory.CreateClient();
-            var result = await client.PutAsJsonAsync($"{BaseUrl}ActualizarProductoNoConforme/{registro}", registro);
+            var result = await client.PutAsJsonAsync($"{BaseUrl}PutActualizarProductoNoConforme/{idProNoCon}/{registro}", registro);
             return result.IsSuccessStatusCode;
 
         }
@@ -332,7 +360,7 @@ namespace Calidad.ProductoNoConforme
         {
             List<Calidad.DTOs.PNC.ProNoConDTO> data;
             string fechaString = Fecha.ToString("yyyy-MM-dd");
-            url = $"{BaseUrl}/GetProductoNoConformePorFecha?Fecha={fechaString}";
+            url = $"{BaseUrl}/GetProductoNoConformePorFecha?Fecha={Fecha}";
             cliente = _clientFactory.CreateClient();
             data = await cliente.GetFromJsonAsync<List<Calidad.DTOs.PNC.ProNoConDTO>>(url) ?? new List<Calidad.DTOs.PNC.ProNoConDTO>();
             return data;
@@ -353,28 +381,44 @@ namespace Calidad.ProductoNoConforme
 
         }
 
-
-
-        public async Task<List<Calidad.DTOs.PNC.ProNoConDTO>> GetProductoNoConformePorFiltro(DateTime fechaInicio, DateTime fechaFinal){
-            if(fechaInicio.Date == fechaFinal.Date){
-                return await this.GetProductoNoConformePorFiltro(fechaInicio, fechaFinal);
-            }else if(fechaInicio.Date < fechaFinal.Date){
-                return await this.GetProductoNoConformePorFiltro(fechaInicio, fechaFinal);
-            }
-            return await this.GetProductoNoConformePorFiltro(fechaFinal, fechaInicio);
-        }
-
-
-
-        public async Task<List<ProNoConDTO>> GetProductoNoConforme (int idRegistro)
+        public async Task<List<Calidad.DTOs.PNC.ProNoConDTO>> GetProductoNoConformePorFiltro(DateTime fechaInicio, DateTime fechaFinal)
         {
-            List<ProNoConDTO> data;
-            url = $"{BaseUrl}/GetProductoNoConformePorFiltro/{idRegistro}";
-            cliente = _clientFactory.CreateClient();
-            data = await cliente.GetFromJsonAsync<List<ProNoConDTO>>(url) ?? new List<ProNoConDTO>();
+            List<Calidad.DTOs.PNC.ProNoConDTO> data;
+            string fechaInicioString = fechaInicio.ToString("yyyy-MM-dd");
+            string fechaFinalString = fechaFinal.ToString("yyyy-MM-dd");
+            url = $"{BaseUrl}/GetProductoNoConformePorFiltro/{fechaInicioString}/{fechaFinalString}";
+            data = await cliente.GetFromJsonAsync<List<Calidad.DTOs.PNC.ProNoConDTO>>(url) ?? new List<Calidad.DTOs.PNC.ProNoConDTO>();
             return data;
-
         }
+
+
+
+
+
+
+
+
+    public async Task<ProNoConDTO> GetProductoNoConforme(int idRegistro)
+        {
+        ProNoConDTO resultado = null;
+        url = $"{BaseUrl}/AddProductoNoConforme/{idRegistro}";
+        cliente = _clientFactory.CreateClient();
+        mensaje = await cliente.PostAsJsonAsync(url, idRegistro);
+        var error = await mensaje.Content.ReadAsStringAsync();
+        if (mensaje.IsSuccessStatusCode)
+        {
+        var lista = await mensaje.Content.ReadFromJsonAsync<List<ProNoConDTO>>();
+        resultado = lista?.FirstOrDefault();
+        }
+        return resultado;
+        }
+
+            // ProNoConDTO data;
+            // url = $"{BaseUrl}/GetProductoNoConforme/{idRegistro}";
+            // cliente = _clientFactory.CreateClient();
+            // data = await cliente.GetFromJsonAsync<ProNoConDTO>(url) ?? new ProNoConDTO();
+            // return data;
+
 
         public async Task<List<ProNoConDTO>> GetProductoNoConformeConTodaLaData(int idRegistro)
         {

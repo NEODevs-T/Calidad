@@ -7,7 +7,7 @@
 @inject IDataPNCDisposicionDefinitiva DataPNCDisposicionDefinitiva
 @inject IDataPNCIdentificacion DataPNCIdentificacion
 @inject IDataPNCPropuestaDisposicion DataPNCPropuestaDisposicion
-@inject IDataPNCRiesgo DataPNCRiesgo
+@* @inject IDataPNCRiesgo DataPNCRiesgo *@
 @inject IDataPNCUnidad DataPNCUnidad
 @inject IDataProductoNoConforme DataProductoNoConforme
 @inject IDataPNCTipo DataPNCTipo
@@ -101,14 +101,14 @@
     public int IdRegistro { get; set; }
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
     private ProNoCon registro {get; set;}  = new ProNoCon();
-    public List<ProNoConDTO>? registroNuevo { get; set; } = new List<ProNoConDTO>();
-    private List<Pnccausante>? listaCausante {get; set;} 
-    private List<PncdisDefi>? listaDisposicionDefinitiva {get; set;} 
-    private List<Pncidentif>? listaIdentificacion {get; set;} 
-    private List<PncproDisp>? listaPropuestaDisposicion {get; set;}
-    private List<Pncriesgo>? listaRiesgo {get; set;}
-    private List<Pncunidad>? listaUnidad {get; set;}
-    private List<Pnctipo>? listaTipo {get; set;}
+    private List<ProNoConDTO>? registronuevo {get; set;} 
+    private List<causaDTO>? listaCausante {get; set;} 
+    private List<DisDefiDTO>? listaDisposicionDefinitiva {get; set;} 
+    private List<IdentifDTO>? listaIdentificacion {get; set;} 
+    private List<ProDispDTO>? listaPropuestaDisposicion {get; set;}
+    //private List<Pncriesgo>? listaRiesgo {get; set;}
+    private List<CaUnidadDTO>? listaUnidad {get; set;}
+    private List<TipoDTO>? listaTipo {get; set;}
     private string ficha { get; set;} = "";
     private int idEmpresa { get; set; }
     private int n { get; set; }
@@ -134,14 +134,14 @@
                 ficha = user.FindFirst(c => c.Type == "Ficha")?.Value ?? "" ;
 
                 
-                registroNuevo = await DataProductoNoConforme.GetProductoNoConformeConTodaLaData(id);
-                @* listaCausante = await DataPNCCausante.ObtenerTodosLosCausantes();
-                listaDisposicionDefinitiva = await DataPNCDisposicionDefinitiva.ObtenerTodosLasDisposicionDefinitiva();
-                listaIdentificacion = await DataPNCIdentificacion.ObtenerTodosLasIdentificaciones();
-                listaPropuestaDisposicion = await DataPNCPropuestaDisposicion.ObtenerTodasLasPropuestaDisposicion();
-                listaRiesgo = await DataPNCRiesgo.ObtenerTodosLosRiesgos();
-                listaUnidad = await DataPNCUnidad.ObtenerTodosLasUnidades();
-                listaTipo = await DataPNCTipo.ObtenerTodosLosTipos();
+                registronuevo = await DataProductoNoConforme.GetProductoNoConformeConTodaLaData(id);
+                @* listaCausante = await DataPNCCausante.GeTodosLosCausantes();
+                listaDisposicionDefinitiva = await DataPNCDisposicionDefinitiva.GetTodosLasDisposicionDefinitiva();
+                listaIdentificacion = await DataPNCIdentificacion.GetTodosLosIdentifi ();
+                listaPropuestaDisposicion = await DataPNCPropuestaDisposicion.GetTodasLasPropuestaDisposicion();
+                //listaRiesgo = await DataPNCRiesgo.ObtenerTodosLosRiesgos();
+                listaUnidad = await DataPNCUnidad.GetTodosLasUnidades();
+                listaTipo = await DataPNCTipo.GetTodosLosTipos();
                 listaEventos = await DataLinea.ObtenerTodasLasLineasDeLaEmpresa(idEmpresa);  *@
                 isCargado = true;
             }

@@ -31,47 +31,47 @@
         </RadzenFieldset>
 
         <div class="table mt-5">
-            <RadzenDataGrid @ref="ordersProductoNoConforme" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="10" AllowSorting="true" 
-                        Data="@listaProductoNoConforme" TItem="ProductoNoConforme" >
+            <RadzenDataGrid @ref="ordersProductoNoConforme" AllowFiltering="false" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="10" AllowSorting="true" 
+                        Data="@registro" TItem="ProNoConDTO" >
                 <Columns>
-                    <RadzenDataGridColumn Width="5%" TItem="ProductoNoConforme" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
+                    <RadzenDataGridColumn Width="4%" TItem="ProNoConDTO" Title="#" Filterable="false" Sortable="false" TextAlign="TextAlign.Center">
                         <Template Context="data">
-                            <RadzenText class="mb-0 tipografia">@(listaProductoNoConforme.IndexOf(data) + 1)</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@(registro.IndexOf(data) + 1)</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Width="9%" TItem="ProductoNoConforme" Property="Fecha" Title="Fecha">
+                    <RadzenDataGridColumn Width="7%" TItem="ProNoConDTO" Property="Pncfecha" Title="Fecha">
                         <Template Context="order">
-                            <RadzenText class="mb-0 tipografia">@order.Fecha.ToString("dd/MM/yyyy")</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@order.Pncfecha.ToString("dd/MM/yyyy")</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn  TItem="ProductoNoConforme" Property="CodigoDeProducto" Title="Codigo del Producto">
+                    <RadzenDataGridColumn  TItem="ProNoConDTO" Property="PnccodProd" Title="Codigo del Producto">
                         <Template Context="order">
-                            <RadzenText class="mb-0 tipografia">@order.CodigoDeProducto</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@order.PnccodProd</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="DescripcionDeProducto" Title="Descripción del Producto">
+                    <RadzenDataGridColumn TItem="ProNoConDTO" Property="PncdesProd" Title="Descripción del Producto">
                         <Template Context="order">
-                            <RadzenText class="mb-0 tipografia">@order.DescripcionDeProducto</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@order.PncdesProd</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn Width="8%" TItem="ProductoNoConforme" Property="Tipo" Title="Tipo">
+                    <RadzenDataGridColumn  TItem="ProNoConDTO" Property="Pnccantida" Title="Cantidad">
                         <Template Context="order">
-                            <RadzenText class="mb-0 tipografia">@order.Tipo</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@order.Pnccantida</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="LugarEvento" Title="Lugar del Evento">
+                    <RadzenDataGridColumn TItem="ProNoConDTO" Property="Pnccargador" Title="Ficha Respondable">
                         <Template Context="order">
-                            <RadzenText class="mb-0 tipografia">@order.LugarEvento</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@order.Pnccargador</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn TItem="ProductoNoConforme" Property="Causante" Title="Causante">
+                    <RadzenDataGridColumn TItem="ProNoConDTO" Property="PncindLibe" Title="Nose">
                         <Template Context="order">
-                            <RadzenText class="mb-0 tipografia">@order.Causante</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@order.PncindLibe</RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
-                    <RadzenDataGridColumn  TItem="ProductoNoConforme" Property="Cantidad" Title="Cantidad">
+                    <RadzenDataGridColumn  TItem="ProNoConDTO" Property="PnccauLibe" Title="Causa de Liberación">
                         <Template Context="order">
-                            <RadzenText class="mb-0 tipografia">@order.Cantidad  @order.Unidad</RadzenText>
+                            <RadzenText class="mb-0 tipografia">@order.PnccauLibe </RadzenText>
                         </Template>
                     </RadzenDataGridColumn>
                     <RadzenDataGridColumn  TItem="ProductoNoConforme"  Title="Detalles">
@@ -99,14 +99,14 @@
 @code{
     private DateTime fechaEmicionInicio {get; set;} = DateTime.Now;
     private DateTime fechaEmicionFinal {get; set;} = DateTime.Now;
-    public RadzenDataGrid<ProductoNoConforme> ordersProductoNoConforme {get; set;} = new RadzenDataGrid<ProductoNoConforme>();
-    public IList<ProductoNoConforme> listaProductoNoConforme {get; set;} = new List<ProductoNoConforme>();
-    public List<ProNoConDTO>? registroNuevo { get; set; } = new List<ProNoConDTO>();
+    public RadzenDataGrid<ProNoConDTO> ordersProductoNoConforme {get; set;} = new RadzenDataGrid<ProNoConDTO>();
+    public List<ProNoConDTO> listaProductoNoConforme {get; set;} = new List<ProNoConDTO>();
+    public List<ProNoConDTO>? registro { get; set; } = new List<ProNoConDTO>();
     private bool isDisabledButton {get; set;} = false;
 
     protected async Task Buscar()
     {
-        registroNuevo = await DataProductoNoConforme.GetProductoNoConformePorFiltro(fechaEmicionInicio,fechaEmicionFinal);
+        registro = await DataProductoNoConforme.GetProductoNoConformePorFiltro(fechaEmicionInicio,fechaEmicionFinal);
     }
     protected async Task Detalles(int IdRegistro){
         NavigationManager.NavigateTo($"detalles/{IdRegistro}");

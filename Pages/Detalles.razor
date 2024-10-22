@@ -6,7 +6,7 @@
 @inject IDataPNCDisposicionDefinitiva DataPNCDisposicionDefinitiva
 @inject IDataPNCIdentificacion DataPNCIdentificacion
 @inject IDataPNCPropuestaDisposicion DataPNCPropuestaDisposicion
-@inject IDataPNCRiesgo DataPNCRiesgo
+@* @inject IDataPNCRiesgo DataPNCRiesgo *@
 @inject IDataPNCUnidad DataPNCUnidad
 @inject IDataProductoNoConforme DataProductoNoConforme
 @inject IDataPNCTipo DataPNCTipo
@@ -73,7 +73,7 @@
                             </RadzenColumn>
                             <RadzenColumn Size="12" SizeMD="4" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="RESPONSABLE / CAUSANTE">
-                                    <RadzenDropDown  Disabled="@IsDisable" Name="CAUSANTE" AllowClear="true" @bind-Value=registro.IdCausaNavigation.IdCausante TextProperty="Cnombre" ValueProperty="IdCausante" AllowVirtualization="true" AllowFiltering="true" Data=@listaCausante  Style="width: 100%;" /> 
+                                    <RadzenDropDown  Disabled="@IsDisable" Name="CAUSANTE" AllowClear="true" @bind-Value=registro.IdCausa TextProperty="Cnombre" ValueProperty="IdCausante" AllowVirtualization="true" AllowFiltering="true" Data=@listaCausante  Style="width: 100%;" /> 
                                 </RadzenFormField>
                             </RadzenColumn>
                             <RadzenColumn Size="6" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
@@ -84,9 +84,9 @@
                             </RadzenColumn>
                             <RadzenColumn Size="6" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="UNIDAD">
-                                    <RadzenDropDown  Disabled="@IsDisable" AllowClear="true" Name="UNIDAD" @bind-Value=registro.IdUnidad AllowVirtualization="true" AllowFiltering="true" Data=@listaUnidad TextProperty="Unombre" ValueProperty="IdUnidad" Style="width: 100%;" /> 
+                                    <RadzenDropDown  Disabled="@IsDisable" AllowClear="true" Name="UNIDAD" @bind-Value=registro.IdCaUnidad AllowVirtualization="true" AllowFiltering="true" Data=@listaUnidad TextProperty="Unombre" ValueProperty="IdUnidad" Style="width: 100%;" /> 
                                 </RadzenFormField>
-                                <RadzenCustomValidator Component="UNIDAD" Validator="@(() => registro.IdUnidad != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
+                                <RadzenCustomValidator Component="UNIDAD" Validator="@(() => registro.IdCaUnidad != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
                             </RadzenColumn>
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
@@ -178,8 +178,7 @@
     public int id { get; set; }
     public int IdRegistro { get; set; }
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
-    private ProNoCon registro {get; set;}  = new ProNoCon();
-    public List<ProNoConDTO>? registroNuevo { get; set; } = new List<ProNoConDTO>();
+    private ProNoConDTO registro {get; set;}  = new ProNoConDTO();
     private List<CausanteDTO>? listaCausante {get; set;} 
     private List<DisDefiDTO>? listaDisposicionDefinitiva {get; set;} 
     private List<IdentifDTO>? listaIdentificacion {get; set;} 
@@ -214,13 +213,13 @@
                 ficha = user.FindFirst(c => c.Type == "Ficha")?.Value ?? "" ;
 
                 
-                registroNuevo = await DataProductoNoConforme.GetProductoNoConforme(id);
+                registro = await DataProductoNoConforme.GetProductoNoConforme(id);
 
                 listaCausante = await DataPNCCausante.GetTodosLosCausantes();
                 listaDisposicionDefinitiva = await DataPNCDisposicionDefinitiva.GetTodosLasDisposicionDefinitiva();
                 listaIdentificacion = await DataPNCIdentificacion.GetTodosLosIdentifi();
                 listaPropuestaDisposicion = await DataPNCPropuestaDisposicion.GetTodasLasPropuestaDisposicion();
-                listaRiesgo = await DataPNCRiesgo.ObtenerTodosLosRiesgos();
+                //listaRiesgo = await DataPNCRiesgo.ObtenerTodosLosRiesgos();
                 listaUnidad = await DataPNCUnidad.GetTodosLasUnidades();
                 listaTipo = await DataPNCTipo.GetTodosLosTipos();
                 listaEventos = await DataLinea.ObtenerTodasLasLineasDeLaEmpresa(idEmpresa); 

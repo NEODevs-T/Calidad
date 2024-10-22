@@ -68,7 +68,7 @@ builder.Services.AddScoped<IDataPNCCausante,DataPNCCausante>();
 builder.Services.AddScoped<IDataPNCDisposicionDefinitiva,DataPNCDisposicionDefinitiva>();
 builder.Services.AddScoped<IDataPNCIdentificacion,DataPNCIdentificacion>();
 builder.Services.AddScoped<IDataPNCPropuestaDisposicion,DataPNCPropuestaDisposicion>();
-builder.Services.AddScoped<IDataPNCRiesgo,DataPNCRiesgo>();
+// builder.Services.AddScoped<IDataPNCRiesgo,DataPNCRiesgo>();
 builder.Services.AddScoped<IDataPNCUnidad,DataPNCUnidad>();
 builder.Services.AddScoped<IDataProductoNoConforme,DataProductoNoConforme>();
 builder.Services.AddScoped<IDataPNCTipo,DataPNCTipo>();

@@ -7,7 +7,7 @@
 @inject IDataPNCDisposicionDefinitiva DataPNCDisposicionDefinitiva
 @inject IDataPNCIdentificacion DataPNCIdentificacion
 @inject IDataPNCPropuestaDisposicion DataPNCPropuestaDisposicion
-@inject IDataPNCRiesgo DataPNCRiesgo
+@* @inject IDataPNCRiesgo DataPNCRiesgo *@
 @inject IDataPNCUnidad DataPNCUnidad
 @inject IDataProductoNoConforme DataProductoNoConforme
 @inject IDataPNCTipo DataPNCTipo
@@ -25,7 +25,7 @@
         @if(isCargado){
             <RadzenText TextStyle="TextStyle.DisplayH5"  class="rz-background-color-success-dark rz-color-white rz-border-radius rz-p-2 rz-mb-5">Disposición De Producto No Conforme</RadzenText>
 
-            <RadzenTemplateForm TItem="ProNoCon" Data=@registro Submit=@OK>
+            <RadzenTemplateForm TItem="ProNoConDTO" Data=@registro Submit=@OK>
 
                 <RadzenFieldset Text="Formulario">
                     <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
@@ -92,14 +92,14 @@
                             </RadzenColumn>
                             <RadzenColumn Size="6" SizeMD="2" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="UNIDAD">
-                                    <RadzenDropDown AllowClear="true" Name="UNIDAD" @bind-Value=registro.IdUnidad AllowVirtualization="true" AllowFiltering="true" Data=@listaUnidad TextProperty="Unombre" ValueProperty="IdUnidad" Style="width: 100%;" /> 
+                                    <RadzenDropDown AllowClear="true" Name="UNIDAD" @bind-Value=registro.IdCaUnidad AllowVirtualization="true" AllowFiltering="true" Data=@listaUnidad TextProperty="Unombre" ValueProperty="IdCaUnidad" Style="width: 100%;" /> 
                                 </RadzenFormField>
-                                <RadzenCustomValidator Component="UNIDAD" Validator="@(() => registro.IdUnidad != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
+                                <RadzenCustomValidator Component="UNIDAD" Validator="@(() => registro.IdCaUnidad != 0)" Text="Requerido" Popup=@popup Style="position: relative" />
                             </RadzenColumn>
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                             <RadzenColumn Size="12" SizeMD="12" Class="rz-text-align-start rz-text-align-md-start">
-                                <RadzenFormField Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="NO CONFORMIDAD">
+                                <RadzenFormField Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="DISCREPANCIA">
                                     <RadzenDropDown  AllowClear="true" Name="NOCONFORMIDAD" @bind-Value=registro.IdCausa AllowVirtualization="true" AllowFiltering="true" Data=@listaCausa TextProperty="Cnombre" ValueProperty="IdCausa" Style="width: 100%;" /> 
                                 </RadzenFormField>
                                 <RadzenCustomValidator Component="NOCONFORMIDAD" Validator="@(() => registro.IdCausa != 0)" Text="Requerido" Popup=@popup Style="position: relative"/>
@@ -178,16 +178,17 @@
 
 @code{
 
+
+
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
-    private ProNoCon registro {get; set;}  = new ProNoCon();
-    private ProNoConDTO registro2 {get; set;} = new ProNoConDTO();
+    private ProNoConDTO registro {get; set;}  = new ProNoConDTO();
     private List<CausanteDTO>? listaCausante {get; set;}
     private List<DisDefiDTO>? listaDisposicionDefinitiva {get; set;} 
     private List<IdentifDTO>? listaIdentificacion {get; set;} 
     private List<ProDispDTO>? listaPropuestaDisposicion {get; set;}
-    private List<Pncriesgo>? listaRiesgo {get; set;}
+    //private List<Pncriesgo>? listaRiesgo {get; set;}
     private List<CaUnidadDTO>? listaUnidad {get; set;}
     private List<TipoDTO>? listaTipo {get; set;}
     private List<causaDTO>? listaCausa {get; set;}
@@ -220,7 +221,7 @@
                 listaDisposicionDefinitiva = await DataPNCDisposicionDefinitiva.GetTodosLasDisposicionDefinitiva();
                 listaIdentificacion = await DataPNCIdentificacion.GetTodosLosIdentifi();
                 listaPropuestaDisposicion = await DataPNCPropuestaDisposicion.GetTodasLasPropuestaDisposicion();
-                listaRiesgo = await DataPNCRiesgo.ObtenerTodosLosRiesgos();
+                //listaRiesgo = await DataPNCRiesgo.ObtenerTodosLosRiesgos();
                 listaUnidad = await DataPNCUnidad.GetTodosLasUnidades();
                 listaTipo = await DataPNCTipo.GetTodosLosTipos();
                 listaEventos = await DataLinea.ObtenerTodasLasLineasDeLaEmpresa(idEmpresa);
@@ -229,7 +230,8 @@
         }
         isCargado = true;
     }
-    protected async Task OK(){
+    protected async Task OK()
+    {
         isDisabledButton = true;
 
         Notificacion("info","","Cagando...");
@@ -237,10 +239,10 @@
         registro.Pnccargador = ficha;
         registro.IdEstado = 2;
 
-        isEstado = await DataProductoNoConforme.AddProductoNoConforme(registro2);
+        isEstado = await DataProductoNoConforme.AddProductoNoConforme(registro);
 
         if(isEstado){
-            registro2 = new ProNoConDTO();
+            registro = new ProNoConDTO();
             registro.Pncfecha = DateTime.Now;
             Notificacion("exito","","Registrado con exito");
         }else{
@@ -254,7 +256,7 @@
         listaCausa = await DataPNCCausa.GetTodosLasCausasPorCausante(idCausante);
     }
     protected void Borrar(){
-        registro = new ProNoCon();
+        registro = new ProNoConDTO();
         registro.Pncfecha = DateTime.Now;
     }
     protected async Task BuscarDescrpcion(){

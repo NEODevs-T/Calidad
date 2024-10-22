@@ -2,7 +2,7 @@
 
 @inject NotificationService NotificationService
 
-@inject IDataPNCRiesgo DataPNCRiesgo
+@* @inject IDataPNCRiesgo DataPNCRiesgo *@
 @inject IDataPNCPropuestaDisposicion DataPNCPropuestaDisposicion
 @inject IDataPNCCausa DataPNCCausa
 @inject IDataPNCCausante DataPNCCausante
@@ -17,7 +17,7 @@
 
         
 
-        <RadzenTemplateForm TItem="PncproDisp" Data=@alternativaDisposicion Submit=@OKAlternativaDisposicion>
+        <RadzenTemplateForm TItem="ProDispDTO" Data=@alternativaDisposicion Submit=@OKAlternativaDisposicion>
             <RadzenFieldset Text="Formatos de Alternativa Propuesta de Disposición">
                 <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
                     <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
@@ -43,7 +43,7 @@
             </RadzenFieldset>
         </RadzenTemplateForm>
 
-        <RadzenTemplateForm TItem="Pnccausa" Data=@causa Submit=@OKCausa>
+        <RadzenTemplateForm TItem="causaDTO" Data=@causa Submit=@OKCausa>
             <RadzenFieldset Text="Formatos de No Conformidades">
                 <RadzenStack Gap="2rem" Class="rz-p-1 rz-p-md-2">
                     <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
@@ -90,10 +90,8 @@
     [CascadingParameter]
     private Task<AuthenticationState>? authenticationState { get; set; }
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
-    private PncproDisp alternativaDisposicion {get; set;} = new PncproDisp();
-    private ProDispDTO registro {get; set;}
-    private Pnccausa causa {get; set;} = new Pnccausa();
-    private causaDTO causaNuevo {get; set;}
+    private ProDispDTO alternativaDisposicion {get; set;} = new ProDispDTO();
+    private causaDTO causa {get; set;} = new causaDTO();
     private List<CausanteDTO> listaCausante {get; set;}
     private bool popup {get; set;} = false; 
     private bool isDisabledButton {get; set;} = false;
@@ -117,19 +115,23 @@
         isCargado = false;
     }
 
-    protected async Task OKAlternativaDisposicion(){
+    protected async Task OKAlternativaDisposicion()
+    {
         isDisabledButton = true;
 
-        Notificacion("info","","Cagando...");
-        
-        alternativaDisposicion.Pdestado = true;
-        allOk = await DataPNCPropuestaDisposicion.AddPropuestaDisposicion(registro);
+        Notificacion("info", "", "Cargando...");
 
-        if(allOk){
-            alternativaDisposicion = new PncproDisp();
-            Notificacion("exito","","Registrado con exito");
-        }else{
-            Notificacion("error","Error"," Realice nuevamente la carga");
+        alternativaDisposicion.Pdestado = true;
+        allOk = await DataPNCPropuestaDisposicion.AddPropuestaDisposicion(alternativaDisposicion);
+
+        if (allOk)
+        {
+            alternativaDisposicion = new ProDispDTO();
+            Notificacion("exito", "", "Registrado con éxito");
+        }
+        else
+        {
+            Notificacion("error", "Error", "Realice nuevamente la carga");
         }
 
         isDisabledButton = false;
@@ -142,10 +144,10 @@
         
         causa.Cestado = true;
         causa.IdCausante = idCausante;
-        allOk = await DataPNCCausa.AddCausa(causaNuevo);
+        allOk = await DataPNCCausa.AddCausa(causa);
 
         if(allOk){
-            causa = new Pnccausa();
+            causa = new causaDTO();
             Notificacion("exito","","Registrado con exito");
         }else{
             Notificacion("error","Error"," Realice nuevamente la carga");
@@ -155,11 +157,11 @@
     }
 
     protected void BorrarAlternativaDisposicion(){
-        alternativaDisposicion = new PncproDisp();
+        alternativaDisposicion = new ProDispDTO();
     }
 
     protected void BorrarCausa(){
-        causa = new Pnccausa();
+        causa = new causaDTO();
     }
 
     public void Notificacion(string tipo,string mensaje,string detalle)
