@@ -200,6 +200,7 @@
     private bool popup {get; set;} = false;
     private bool isEstado {get; set;} 
     private bool isCargado {get; set;} 
+    [Inject] IJSRuntime JSRuntime { get; set; }
 
     private List<Linea>? listaEventos {get; set;}
         
@@ -259,14 +260,43 @@
         registro = new ProNoConDTO();
         registro.Pncfecha = DateTime.Now;
     }
-    protected async Task BuscarDescrpcion(){
+
+    protected async Task BuscarDescrpcion()
+{
+    try
+    {
+
         registro.PncdesProd = await DataAPI.ObtenerDescripciondeProducto(registro.PnccodProd);
-        if (registro.PncdesProd == ""){
-            Notificacion("error","","No se encontro el codigo");
-        }else{
-            Notificacion("info","","Se encontro el codigo");
+
+
+        if (string.IsNullOrEmpty(registro.PncdesProd))
+        {
+            Notificacion("error", "", "No se encontró el código");
+        }
+        else
+        {
+            Notificacion("info", "", "Se encontró el código");
         }
     }
+    catch (HttpRequestException httpEx) when (httpEx.StatusCode == System.Net.HttpStatusCode.InternalServerError)
+    {
+
+        Notificacion("error", "", "Hubo un problema con el servidor. Por favor, recargue la página.");
+        Console.Error.WriteLine($"Error 500: {httpEx.Message}");
+
+
+        StateHasChanged(); 
+
+
+        await JSRuntime.InvokeVoidAsync("location.reload");
+    }
+    catch (Exception ex)
+    {
+
+        Notificacion("error", "", "Ocurrió un error inesperado.");
+        Console.Error.WriteLine($"Error inesperado: {ex.Message}");
+    }
+}
 
     public void Notificacion(string tipo,string mensaje,string detalle)
     {

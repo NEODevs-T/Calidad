@@ -56,4 +56,6 @@ public partial class ProNoCon
     public virtual Pnctipo IdTipoNavigation { get; set; } = null!;
 
     public virtual Pncunidad IdUnidadNavigation { get; set; } = null!;
+
+
 }

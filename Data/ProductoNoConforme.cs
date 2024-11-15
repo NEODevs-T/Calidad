@@ -287,15 +287,15 @@ namespace Calidad.ProductoNoConforme
 
     public interface IDataProductoNoConforme
     {
-        Task<bool> AddProductoNoConforme(ProNoConDTO registro);
-        Task<bool> ActualizarProductoNoConforme(int idProNoCon, ProNoConDTO registro);
+        Task <bool> AddProductoNoConforme(ProNoConDTO registro);
+        Task <bool> ActualizarProductoNoConforme(int idProNoCon, ProNoConDTO registro);
         Task <ProNoConDTO> GetProductoNoConforme(int idRegistro);
-        Task<List<ProNoConDTO>> GetProductoNoConformeConTodaLaData(int idRegistro);
-        Task<List<Calidad.DTOs.PNC.ProNoConDTO>> GetProductoNoConformePorFecha(DateTime Fecha);
+        Task <ProNoConDTO> GetProductoNoConformeConTodaLaData(int idRegistro);
+        Task<List<Calidad.DTOs.PNC.ProductoNoConformeV>> GetProductoNoConformePorFecha(DateTime Fecha);
 
-        Task<List<Calidad.DTOs.PNC.ProNoConDTO>> GetProductoNoConformeEntreFechas(DateTime FechaInicio, DateTime FechaFinal);
+        Task<List<Calidad.DTOs.PNC.ProductoNoConformeV>> GetProductoNoConformeEntreFechas(DateTime FechaInicio, DateTime FechaFinal);
 
-        Task<List<Calidad.DTOs.PNC.ProNoConDTO>> GetProductoNoConformePorFiltro(DateTime fechaInicio, DateTime fechaFinal);
+        Task<List<Calidad.DTOs.PNC.ProductoNoConformeV>> GetProductoNoConformePorFiltro(DateTime fechaInicio, DateTime fechaFinal);
     }
 
     public class DataProductoNoConforme : IDataProductoNoConforme
@@ -318,21 +318,15 @@ namespace Calidad.ProductoNoConforme
 
         public async Task<bool> AddProductoNoConforme(ProNoConDTO registro)
         {
-        {
-            bool band = false;
             url = $"{BaseUrl}/AddProductoNoConforme/{registro}";
-            cliente =  _clientFactory.CreateClient();
-            mensaje = await cliente.PostAsJsonAsync(url, registro);
-            var error = await mensaje.Content.ReadAsStringAsync();
-            if(mensaje.IsSuccessStatusCode){
-                band = await mensaje.Content.ReadFromJsonAsync<bool>();
-            }
-            return band;
+            cliente = _clientFactory.CreateClient();
+            var response = await cliente.PostAsJsonAsync(url, registro);
+            response.EnsureSuccessStatusCode();
+            
+            var data = await response.Content.ReadFromJsonAsync<bool>();
+            
+            return data; 
         }
-
-        }
-
-
 
 
 
@@ -356,42 +350,40 @@ namespace Calidad.ProductoNoConforme
 
 
 
-        public async Task<List<Calidad.DTOs.PNC.ProNoConDTO>> GetProductoNoConformePorFecha (DateTime Fecha)
+        public async Task<List<Calidad.DTOs.PNC.ProductoNoConformeV>> GetProductoNoConformePorFecha (DateTime Fecha)
         {
-            List<Calidad.DTOs.PNC.ProNoConDTO> data;
+            List<Calidad.DTOs.PNC.ProductoNoConformeV> data;
             string fechaString = Fecha.ToString("yyyy-MM-dd");
             url = $"{BaseUrl}/GetProductoNoConformePorFecha?Fecha={Fecha}";
             cliente = _clientFactory.CreateClient();
-            data = await cliente.GetFromJsonAsync<List<Calidad.DTOs.PNC.ProNoConDTO>>(url) ?? new List<Calidad.DTOs.PNC.ProNoConDTO>();
+            data = await cliente.GetFromJsonAsync<List<Calidad.DTOs.PNC.ProductoNoConformeV>>(url) ?? new List<Calidad.DTOs.PNC.ProductoNoConformeV>();
             return data;
 
         }
 
 
-        public async Task<List<Calidad.DTOs.PNC.ProNoConDTO>> GetProductoNoConformeEntreFechas(DateTime fechaInicio, DateTime fechaFinal)
+        public async Task<List<Calidad.DTOs.PNC.ProductoNoConformeV>> GetProductoNoConformeEntreFechas(DateTime fechaInicio, DateTime fechaFinal)
         {
 
-            List<Calidad.DTOs.PNC.ProNoConDTO> data;
+            List<Calidad.DTOs.PNC.ProductoNoConformeV> data;
             string fechaInicioString = fechaInicio.ToString("yyyy-MM-dd");
             string fechaFinalString = fechaFinal.ToString("yyyy-MM-dd");
             url = $"{BaseUrl}/GetProductoNoConformeEntreFechas?FechaInico={fechaInicioString}&FechaFinal={fechaFinalString}";
-            data = await cliente.GetFromJsonAsync<List<Calidad.DTOs.PNC.ProNoConDTO>>(url) ?? new List<Calidad.DTOs.PNC.ProNoConDTO>();
+            data = await cliente.GetFromJsonAsync<List<Calidad.DTOs.PNC.ProductoNoConformeV>>(url) ?? new List<Calidad.DTOs.PNC.ProductoNoConformeV>();
             return data;
 
 
         }
 
-        public async Task<List<Calidad.DTOs.PNC.ProNoConDTO>> GetProductoNoConformePorFiltro(DateTime fechaInicio, DateTime fechaFinal)
+        public async Task<List<Calidad.DTOs.PNC.ProductoNoConformeV>> GetProductoNoConformePorFiltro(DateTime fechaInicio, DateTime fechaFinal)
         {
-            List<Calidad.DTOs.PNC.ProNoConDTO> data;
+            List<Calidad.DTOs.PNC.ProductoNoConformeV> data;
             string fechaInicioString = fechaInicio.ToString("yyyy-MM-dd");
             string fechaFinalString = fechaFinal.ToString("yyyy-MM-dd");
             url = $"{BaseUrl}/GetProductoNoConformePorFiltro/{fechaInicioString}/{fechaFinalString}";
-            data = await cliente.GetFromJsonAsync<List<Calidad.DTOs.PNC.ProNoConDTO>>(url) ?? new List<Calidad.DTOs.PNC.ProNoConDTO>();
+            data = await cliente.GetFromJsonAsync<List<Calidad.DTOs.PNC.ProductoNoConformeV>>(url) ?? new List<Calidad.DTOs.PNC.ProductoNoConformeV>();
             return data;
         }
-
-
 
 
 
@@ -400,38 +392,28 @@ namespace Calidad.ProductoNoConforme
 
     public async Task<ProNoConDTO> GetProductoNoConforme(int idRegistro)
         {
-        ProNoConDTO resultado = null;
-        url = $"{BaseUrl}/AddProductoNoConforme/{idRegistro}";
-        cliente = _clientFactory.CreateClient();
-        mensaje = await cliente.PostAsJsonAsync(url, idRegistro);
-        var error = await mensaje.Content.ReadAsStringAsync();
-        if (mensaje.IsSuccessStatusCode)
-        {
-        var lista = await mensaje.Content.ReadFromJsonAsync<List<ProNoConDTO>>();
-        resultado = lista?.FirstOrDefault();
-        }
-        return resultado;
+            ProNoConDTO data;
+            url = $"{BaseUrl}/GetProductoNoConforme/{idRegistro}";
+            cliente = _clientFactory.CreateClient();
+            data = await cliente.GetFromJsonAsync<ProNoConDTO>(url) ?? new ProNoConDTO();
+            return data;
         }
 
-            // ProNoConDTO data;
-            // url = $"{BaseUrl}/GetProductoNoConforme/{idRegistro}";
-            // cliente = _clientFactory.CreateClient();
-            // data = await cliente.GetFromJsonAsync<ProNoConDTO>(url) ?? new ProNoConDTO();
-            // return data;
 
 
-        public async Task<List<ProNoConDTO>> GetProductoNoConformeConTodaLaData(int idRegistro)
+
+        public async Task<ProNoConDTO> GetProductoNoConformeConTodaLaData(int idRegistro)
         {
-            List<ProNoConDTO> data;
+            ProNoConDTO data;
             url = $"{BaseUrl}/GetProductoNoConformeConTodaLaData/{idRegistro}";
             cliente = _clientFactory.CreateClient();
-            data = await cliente.GetFromJsonAsync<List<ProNoConDTO>>(url) ?? new List<ProNoConDTO>();
+            data = await cliente.GetFromJsonAsync<ProNoConDTO>(url) ?? new ProNoConDTO();
             return data;
 
         }
+
+
     }
-
-
 
 
     public interface IDataPNCCausa

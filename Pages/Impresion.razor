@@ -23,7 +23,7 @@
 
 <AuthorizeView Roles="SuperAdmin,UserPaisCalidad,UserEmpresaCalidad,UserCentroCalidad,SuperUser" Context="autorized">
     <Authorized>
-    @if(registro.IdTipoNavigation != null){
+    @if(registro.NombreTipo != null){
                         <RadzenCard Class="rz-my-12 rz-mx-auto" Style="max-width: 800px">
                         <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" Class="rz-p-4">
                             <RadzenStack Gap="0">
@@ -41,27 +41,27 @@
                             <RadzenRow RowGap="0">
                                 <RadzenColumn>
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Tipo</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdTipoNavigation.Tnombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.NombreTipo</b></RadzenText>
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Lote</RadzenText>
                                     <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.Pnclote</b></RadzenText>
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Orden de Fabricacion</RadzenText>
                                     <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.PncordFabr</b></RadzenText>
                                 </RadzenColumn>
                                 <RadzenColumn >
-                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Lugas del Evento</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdLugaEvenNavigation.Lnom</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Lugar del Evento</RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.Lugarnombre</b></RadzenText>
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Reponsable</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdCausaNavigation.IdCausanteNavigation.Cnombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.Causantenombre</b></RadzenText>
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Cantidad</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.Pnccantida @registro.IdUnidadNavigation.Unombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.Pnccantida @registro.UnidadNombre</b></RadzenText>
                                 </RadzenColumn>
                                 <RadzenColumn>
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Identificacion</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdIdentifNavigation.Inombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdentifidNombre</b></RadzenText>
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Alternativa Propuesta de Disposición</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdProDispNavigation.Pdnombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.ProDisNombre</b></RadzenText>
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-black rz-display-flex rz-mt-4 rz-mb-0">Disposición Definitiva</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.IdDisDefiNavigation.Ddnombre</b></RadzenText>
+                                    <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-black"><b>@registro.DisDefiNombre</b></RadzenText>
                                 </RadzenColumn>
                             </RadzenRow>
                         </RadzenCard>
@@ -69,7 +69,7 @@
                             <RadzenRow RowGap="0">
                                 <RadzenColumn >
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-5 rz-mb-0">No Conformidad</RadzenText>
-                                    <RadzenText TextStyle="TextStyle.Body1" ><b>@registro.IdCausaNavigation.Cnombre</b></RadzenText>  
+                                    <RadzenText TextStyle="TextStyle.Body1" ><b>@registro.Causanombre</b></RadzenText>  
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-5 rz-mb-0">Causa de Liberación</RadzenText>
                                     <RadzenText TextStyle="TextStyle.Body1" ><b>@registro.PnccauLibe</b></RadzenText>
                                     <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-5 rz-mb-0">Indicación de Liberación</RadzenText>
@@ -100,8 +100,7 @@
     public int id { get; set; }
     public int IdRegistro { get; set; }
     private IEnumerable<Claim> claims = Enumerable.Empty<Claim>();
-    private ProNoCon registro {get; set;}  = new ProNoCon();
-    private List<ProNoConDTO>? registronuevo {get; set;} 
+    private ProNoConDTO registro {get; set;}  = new ProNoConDTO();
     private List<causaDTO>? listaCausante {get; set;} 
     private List<DisDefiDTO>? listaDisposicionDefinitiva {get; set;} 
     private List<IdentifDTO>? listaIdentificacion {get; set;} 
@@ -134,7 +133,7 @@
                 ficha = user.FindFirst(c => c.Type == "Ficha")?.Value ?? "" ;
 
                 
-                registronuevo = await DataProductoNoConforme.GetProductoNoConformeConTodaLaData(id);
+                registro = await DataProductoNoConforme.GetProductoNoConformeConTodaLaData(id);
                 @* listaCausante = await DataPNCCausante.GeTodosLosCausantes();
                 listaDisposicionDefinitiva = await DataPNCDisposicionDefinitiva.GetTodosLasDisposicionDefinitiva();
                 listaIdentificacion = await DataPNCIdentificacion.GetTodosLosIdentifi ();
