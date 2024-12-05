@@ -302,7 +302,7 @@ namespace Calidad.ProductoNoConforme
     {
 
         private readonly IHttpClientFactory _clientFactory;
-        private const string BaseUrl = "http://neo.paveca.com.ve/apineomaster/api/ProductoNoConforme";
+        private const string BaseUrl = " http://localhost:5021/apineomaster/api/ProductoNoConforme";
 
         private HttpClient cliente { get; set; } = new HttpClient();
 
@@ -315,18 +315,21 @@ namespace Calidad.ProductoNoConforme
             _clientFactory = clientFactory;
         }
 
-
-        public async Task<bool> AddProductoNoConforme(ProNoConDTO registro)
+        public async Task<bool> AddProductoNoConforme(ProNoConDTO registro) 
         {
-            url = $"{BaseUrl}/AddProductoNoConforme/{registro}";
+            bool band = false;
+            string url = $"{BaseUrl}/AddProductoNoConforme/{registro}";
             cliente = _clientFactory.CreateClient();
-            var response = await cliente.PostAsJsonAsync(url, registro);
-            response.EnsureSuccessStatusCode();
-            
-            var data = await response.Content.ReadFromJsonAsync<bool>();
-            
-            return data; 
+            mensaje = await cliente.PostAsJsonAsync(url, registro);  
+            var error = await mensaje.Content.ReadAsStringAsync(); 
+            Console.WriteLine(error);
+            if (mensaje.IsSuccessStatusCode)
+            {
+                band = await mensaje.Content.ReadFromJsonAsync<bool>();
+            }
+            return band;
         }
+
 
 
 

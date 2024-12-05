@@ -32,7 +32,7 @@
                         <RadzenRow AlignItems="AlignItems.Center" RowGap="0.25rem">
                             <RadzenColumn Size="12" SizeMD="3" Class="rz-text-align-start rz-text-align-md-start">
                                 <RadzenFormField  Variant="Variant.Flat" style="width: 98%;" Size="12" SizeMD="12" Text="FECHA">
-                                    <RadzenDatePicker Name="FECHA" @bind-Value=registro.Pncfecha DateFormat="dd/MM/yyyy" />
+                                    <RadzenDatePicker Name="FECHA" @bind-Value=registro.Pncfecha DateFormat="yyyy/MM/dd" />
                                 </RadzenFormField>
                                 <RadzenRequiredValidator Component="FECHA" Text="Requerido" Popup=@popup Style="position: relative"/>
                             </RadzenColumn>
@@ -246,7 +246,8 @@
             registro = new ProNoConDTO();
             registro.Pncfecha = DateTime.Now;
             Notificacion("exito","","Registrado con exito");
-        }else{
+        }
+        else{
             Notificacion("error","Error"," Realice nuevamente la carga");
         }
 
