@@ -318,7 +318,7 @@ namespace Calidad.ProductoNoConforme
         public async Task<bool> AddProductoNoConforme(ProNoConDTO registro) 
         {
             bool band = false;
-            string url = $"{BaseUrl}/AddProductoNoConforme/{registro}";
+            string url = $"{BaseUrl}/AddProductoNoConforme";
             cliente = _clientFactory.CreateClient();
             mensaje = await cliente.PostAsJsonAsync(url, registro);  
             var error = await mensaje.Content.ReadAsStringAsync(); 
